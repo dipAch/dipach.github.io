@@ -4,7 +4,11 @@ title: About
 permalink: /about/
 ---
 
-Skipping this for now, as this may not be the most interesting place!
+Developer, Systems Software Enthusiast!
+
+Constant Learner, Open-Source software explorer.
+
+Django/Python by day -> C by night...
 
 ### More Information
 
