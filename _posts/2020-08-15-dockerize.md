@@ -87,11 +87,11 @@ func HelloServer(w http.ResponseWriter, r *http.Request) {
 ```
 
 **project-root/app/Makefile**
-`
+```
 run-dev-server:
 	go build
 	./app
-`
+```
 
 **project-root/docker-compose.yml**
 ```
