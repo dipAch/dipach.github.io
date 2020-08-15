@@ -5,14 +5,11 @@ tags: [docker, dev-env]
 excerpt_separator: <!--end_excerpt-->
 ---
 
-Docker provides a great way to setup a ready-to-use, throwaway playground environment for software testing and development in general.
-
-<!--end_excerpt-->
----
-
 ## Intro
 
 Docker provides a great way to setup a ready-to-use, throwaway playground environment for software testing and development in general.
+
+<!--end_excerpt-->
 
 For the very same reason let's setup up a multi-purpose docker based environment, where we can build different softwares from the ground up, without polluting our actual host system with dependency installs and the likes.
 
