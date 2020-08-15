@@ -8,7 +8,7 @@ Developer, Systems Software Enthusiast!
 
 Constant Learner, Open-Source software explorer.
 
-Django/Python by day -> C by night...
+Django/Python by day... C by night.
 
 ### More Information
 
