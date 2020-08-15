@@ -5,6 +5,7 @@ tags: [docker, dev-env]
 ---
 
 ## Intro
+---
 
 Docker provides a great way to setup a ready-to-use, throwaway playground environment for software testing and development in general.
 
@@ -13,6 +14,7 @@ For the very same reason let's setup up a multi-purpose docker based environment
 If you already have a docker setup lying around on your system / workstation, then you can proceed with the other blog posts. Make sure to check if the appropriate system packages are available on your docker image (every project post has a build requirements checklist). If some packages are missing, please checkout the below **Dockerfile** recipe to install the appropriate system packages on to your image or container.
 
 ## Do I really need it?
+---
 
 I will be using an alpine-linux based docker image, that comes with golang installed. *Why you ask?*
 
@@ -21,6 +23,7 @@ Well, I was learning golang at the time of writing this and wanted a docker imag
 Also, there are few other things that I have added to the below recipe (You may need it, you may not need it). You can cherry-pick or just have as-is. I will be updating the **Dockerfile** recipe, as and when i'll be needing more packages for future projects.
 
 ## Where's my Playground!
+---
 
 Before you proceed, make sure you have *docker and docker-compose* available on your system.
 If not, then there are plenty of good articles to install docker & docker-compose for your respective Operating Systems. Fire up your favorite search engine, now.
@@ -39,6 +42,7 @@ Below is the tree structure from the **project-root** directory. Name the root d
 ```
 
 ## What should I put in em'?
+---
 
 > **_project-root/app/Dockerfile_**
 
@@ -123,6 +127,9 @@ services:
 ```
 
 ## Build and launch your playground
+---
+
+From your project root, where you have the docker-compose.yml file, run below commands:
 
 * **docker-compose build**
 * **docker-compose up**
@@ -136,6 +143,7 @@ go-app_1  | ./app
 ```
 
 ## Outro
+---
 
 Well now you have the base docker environment ready. You can mount any volume from your host system and play with different open-source projects. The sky is the limit.
 
