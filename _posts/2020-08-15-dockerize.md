@@ -39,7 +39,7 @@ Below is the tree structure from the **project-root** directory. Name the root d
         |-- docker-compose.yml
 ```
 
-### What should I put in em'?
+## What should I put in em'?
 
 **project-root/app/Dockerfile**
 ```
