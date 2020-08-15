@@ -32,11 +32,11 @@ Below is the tree structure from the **project-root** directory. Name the root d
 
 ```
 -- project-root
-	|-- app
-		|-- Dockerfile
-		|-- server.go
-		|-- Makefile
-	|-- docker-compose.yml
+    |-- app
+        |-- Dockerfile
+        |-- server.go
+        |-- Makefile
+        |-- docker-compose.yml
 ```
 
 ### What should I put in em'?
@@ -89,8 +89,8 @@ func HelloServer(w http.ResponseWriter, r *http.Request) {
 **project-root/app/Makefile**
 ```
 run-dev-server:
-	go build
-	./app
+    go build
+    ./app
 ```
 
 **project-root/docker-compose.yml**
@@ -124,7 +124,7 @@ services:
 * **docker-compose build**
 * **docker-compose up**
 
-![Successful Build](/images/green-check.png) You should be seeing something like this towards the end of a successful build and container startup.
+You should be seeing something like below towards the end of a successful build and container startup.
 
 ```
 Attaching to project-root_go-app_1
