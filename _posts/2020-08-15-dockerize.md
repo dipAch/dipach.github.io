@@ -4,8 +4,6 @@ title: docker up my playground
 tags: [docker, dev-env]
 ---
 
-## Intro
----
 
 Docker provides a great way to setup a ready-to-use, throwaway playground environment for software testing and development in general.
 

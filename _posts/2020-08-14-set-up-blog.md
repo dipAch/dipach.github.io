@@ -4,8 +4,6 @@ title: taking jekyll out for a spin!
 tags: [blog-post, first-born]
 ---
 
-# Lorem Ipsum
----
 
 This is a test post!
 
