@@ -128,7 +128,7 @@ services:
 * **docker-compose build**
 * **docker-compose up**
 
-![Successful Build](/images/green-check.png =100x20) You should be seeing something like this towards the end of a successful build and container startup.
+![Successful Build](/images/green-check.png) You should be seeing something like this towards the end of a successful build and container startup.
 
 ```
 Attaching to project-root_go-app_1
