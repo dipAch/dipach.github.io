@@ -2,14 +2,13 @@
 layout: post
 title: docker up my playground
 tags: [docker, dev-env]
-excerpt_separator: <!--end_excerpt-->
 ---
 
 ## Intro
 
 Docker provides a great way to setup a ready-to-use, throwaway playground environment for software testing and development in general.
 
-For the very same reason let's setup up a multi-purpose docker based environment, where we can build different <!--end_excerpt-->softwares from the ground up, without polluting our actual host system with dependency installs and the likes.
+For the very same reason let's setup up a multi-purpose docker based environment, where we can build different softwares from the ground up, without polluting our actual host system with dependency installs and the likes.
 
 If you already have a docker setup lying around on your system / workstation, then you can proceed with the other blog posts. Make sure to check if the appropriate system packages are available on your docker image (every project post has a build requirements checklist). If some packages are missing, please checkout the below **Dockerfile** recipe to install the appropriate system packages on to your image or container.
 
