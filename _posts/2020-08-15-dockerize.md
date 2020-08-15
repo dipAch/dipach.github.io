@@ -41,7 +41,8 @@ Below is the tree structure from the **project-root** directory. Name the root d
 
 ## What should I put in em'?
 
-**project-root/app/Dockerfile**
+> **_project-root/app/Dockerfile_**
+
 ```
 FROM golang:1.14.3-alpine3.11 as dev
 
@@ -67,7 +68,8 @@ WORKDIR $APP_ROOT
 ADD ./ $APP_ROOT/
 ```
 
-**project-root/app/server.go**
+> **_project-root/app/server.go_**
+
 ```
 package main
 
@@ -86,14 +88,16 @@ func HelloServer(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-**project-root/app/Makefile**
+> **_project-root/app/Makefile_**
+
 ```
 run-dev-server:
     go build
     ./app
 ```
 
-**project-root/docker-compose.yml**
+> **_project-root/docker-compose.yml_**
+
 ```
 version: '3.7'
 
