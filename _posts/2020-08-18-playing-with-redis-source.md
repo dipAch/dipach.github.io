@@ -1,6 +1,6 @@
 ---
 layout: post
-title: A date with Redis
+title: a date with redis
 tags: [redis, deep-dive]
 ---
 
@@ -116,7 +116,7 @@ bash-5.0# ./src/redis-server
 57:M 05 Sep 2020 14:28:21.306 * Ready to accept connections
 ```
 
-Don't mind the unfamiliar ascii art, I did it as part of my redis internals learning :P.
+Don't mind the unfamiliar ascii art, I did it as part of my redis internals learning :stuck_out_tongue_winking_eye:.
 
 To start the client, type below command in another (possibly adjacent) container shell window.
 
