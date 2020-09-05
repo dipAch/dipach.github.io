@@ -111,9 +111,11 @@ bash-5.0# ./src/redis-server
 
 Don't mind the unfamiliar ascii art, I did it as part of my redis internals learning :P.
 
-To start the client, type below command in another container shell window.
+To start the client, type below command in another (possibly adjacent) container shell window.
 
 ```
+$ docker exec -it project-root_go-app_1 bash
+bash-5.0#
 bash-5.0# ./src/redis-cli
 127.0.0.1:6379> set foo bar
 OK
