@@ -46,7 +46,7 @@ With all of the above done, we can now connect to the shell interface of our run
 $ docker exec -it project-root_go-app_1 bash
 ```
 
-Once inside the container's shell interface, we can navigate to the mapped redis directory. Now if you've followed along our previous docker playground setup blog post, it should be **/webapps/redis/**.
+Once inside the container's shell interface, we can navigate to the mapped redis directory. If you've followed along our previous docker playground blog post, it should be **/webapps/redis/**.
 
 From inside this redis root directory, we can execute the **make** command to build redis from the source. Run the below command like so,
 
