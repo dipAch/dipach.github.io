@@ -15,7 +15,7 @@ Like most open-source software, redis is also hosted on github. Head on to [http
 ## Building Redis
 ---
 
-In order to build redis and play with it, let's use our docker playground environment that we previously created here -> [setup my docker playground]({{site.baseurl}}/dockerize/ "docker up my playground")
+In order to build redis and play with it, let's use our docker playground environment that we previously created here - [setup my docker playground]({{site.baseurl}}/dockerize/ "docker up my playground")
 
 Most of the dependencies required to build and run the project, are already setup as part of the docker based playground.
 
