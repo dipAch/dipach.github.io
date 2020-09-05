@@ -10,7 +10,7 @@ Redis needs no introduction. It is a widely deployed data-structure server. In t
 ## Getting Redis
 ---
 
-Like most open-source software, Redis is also hosted on Github. Head on to https://github.com/redis/redis and clone the repository, using either the *HTTPS or SSH* options.
+Like most open-source software, redis is also hosted on github. Head on to [https://github.com/redis/redis](https://github.com/redis/redis) and clone the repository, using either the *HTTPS or SSH* options.
 
 ## Building Redis
 ---
