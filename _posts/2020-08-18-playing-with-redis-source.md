@@ -38,7 +38,7 @@ services:
     ...
 ```
 
-Once the mapped volume is available in your docker instance, we can build redis from the ground up. You will most linkely need to re-start your container after changing the above **docker-compose.yml** file.
+Once the mapped volume is available in your docker instance, we can build redis from the ground up. You will most likely need to re-start your container after changing the above **docker-compose.yml** file.
 
 With all of the above done, we can now connect to the shell interface of our running image instance (a.k.a the container). Type below command in your terminal window.
 
@@ -122,6 +122,9 @@ To start the client, type below command in another (possibly adjacent) container
 
 ```
 $ docker exec -it project-root_go-app_1 bash
+bash-5.0# cd /webapps/redis/
+bash-5.0# pwd
+/webapps/redis
 bash-5.0#
 bash-5.0# ./src/redis-cli
 127.0.0.1:6379> set foo bar
