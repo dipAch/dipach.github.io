@@ -5,22 +5,19 @@ tags: [redis, deep-dive, algorithms]
 ---
 
 
-# Wander in Redis Land!
----
-
 There are just a handful of articles that prove helpful when trying to learn the internals of a project like redis, and even fewer that actually demonstrates the internals in a hands-on manner. In order to bridge that gap, here is an attempt to explore and study redis' anatomy while also implementing a (fairly serious) redis command from the ground up to provide a more involved experience to the reader.
 It serves as a good baseline for anyone who tends to dive deep into the burrows of redis world and prefers practicality over monotonous textual ingenuity.
 
-## The Goal
+# Wander in Redis Land!
 ---
 
 Let us add a new command that will check whether a given key of type string is a palindrome or not?
 Quite exciting, eh?!
 
-## A brief about the important C structs within Redis
+# A brief about the important C structs within Redis
 ---
 
-**client Struct**
+**Client C Struct**
 ---
 
 An important Redis data structure is the one defining a client. The structure has many fields, below are some of the members:
@@ -32,8 +29,8 @@ An important Redis data structure is the one defining a client. The structure ha
 ...
 
 struct client {
-	... other fields ...
-	connection *conn;
+    ... other fields ...
+    connection *conn;
     sds querybuf;
     int argc;
     robj **argv;
@@ -50,15 +47,15 @@ struct client {
 
 The client structure defines a **Connected Client**:
 
-* The `conn` field is a struct that has the client socket file descriptor as its member field.
-* `argc` and `argv` are populated with the command the client is executing, so that functions implementing a given Redis command can read the arguments.
-* `querybuf` accumulates the requests from the client, which are parsed by the Redis server according to the Redis protocol and executed by calling the implementations of the commands the client is executing.
-* `reply` and `buf` are dynamic and static buffers that accumulate the replies the server sends to the client. These buffers are incrementally written to the socket as soon as the file descriptor is writable.
+* The **conn** field is a struct that has the client socket file descriptor as its member field.
+* **argc** and **argv** are populated with the command the client is executing, so that functions implementing a given Redis command can read the arguments.
+* **querybuf** accumulates the requests from the client, which are parsed by the Redis server according to the Redis protocol and executed by calling the implementations of the commands the client is executing.
+* **reply** and **buf** are dynamic and static buffers that accumulate the replies the server sends to the client. These buffers are incrementally written to the socket as soon as the file descriptor is writable.
 
-**redisObject Struct**
+**redisObject C Struct**
 ---
 
-As you can see in the client structure above, arguments in a command are described as `robj` structures. The following is the full `robj` structure, which defines a **Redis Object**:
+As you can see in the client structure above, arguments in a command are described as **robj** structures. The following is the full **robj** structure, which defines a **Redis Object**:
 
 > **redis/src/server.h**
 
@@ -82,14 +79,14 @@ typedef struct redisObject {
 
 Basically this structure can represent all the basic Redis data types like strings, lists, sets, sorted sets and so forth.
 
-The interesting thing is that it has a `type` field, so that it is possible to know what type a given object has, and a `refcount`, so that the same object can be referenced in multiple places without allocating it multiple times.
+The interesting thing is that it has a **type** field, so that it is possible to know what type a given object has, and a **refcount**, so that the same object can be referenced in multiple places without allocating it multiple times.
 
-Finally the `ptr` field points to the actual representation of the object, which might vary even for the same type, depending on the `encoding` used.
+Finally the **ptr** field points to the actual representation of the object, which might vary even for the same type, depending on the **encoding** used.
 
 # Registering a new command
 ---
 
-All redis commands are defined inside `redis/src/server.c` in an array of structs called the **redisCommandTable**. We will add our new command entry inside this command table array like so,
+All redis commands are defined inside **redis/src/server.c** in an array of structs called the **redisCommandTable**. We will add our new command entry inside this command table array like so,
 
 > **redis/src/server.c**
 
@@ -101,7 +98,7 @@ struct redisCommand redisCommandTable[] = {
     ...
     ...
 
-	{"palindrome", palindromeCommand, 2,
+    {"palindrome", palindromeCommand, 2,
      "read-only fast @string",
      0, NULL, 1, 1, 1, 0, 0, 0},
 
@@ -113,62 +110,34 @@ struct redisCommand redisCommandTable[] = {
 ...
 ```
 
-The global variable **redisCommandTable** defines all the Redis commands, specifying the name of the command, the function implementing the command (a.k.a the handler), the number of arguments required, and other properties of each command.
+The global variable **redisCommandTable** defines all the Redis commands, specifying the name of the command, the function implementing the command (a.k.a the **handler**), the number of arguments required, and other properties of each command.
 
-In the above example `2` is the number of arguments the command takes, while `"read-only fast @string"` are the command flags as documented in the command table top comment inside `redis/src/server.c`.
+In the above example **2** is the number of arguments the command takes, while **"read-only fast @string"** are the command flags as documented in the command table top comment inside **redis/src/server.c**.
 
-**Anatomy of the command struct**
+## Anatomy of the command struct
 ---
 
-* name:            A string representing the command name.
-				   ==> "palindrome"
-* function:        Pointer to the C function implementing the command.
-				   ==> palindromeCommand
-* arity:           Number of arguments, it is possible to use -N to say >= N.
-				   ==> 2
-* sflags:          Command flags as string. See below for a table of flags.
-				   ==> "read-only fast @string"
-* flags:           Flags as bitmask. Computed by Redis using the 'sflags' field.
-				   ==> 0
-* get_keys_proc:   An optional function to get key arguments from a command.
-                   This is only used when the following three fields are not
-                   enough to specify what arguments are keys.
-                   ==> NULL
-* first_key_index: First argument that is a key
-				   ==> 1
-* last_key_index:  Last argument that is a key
-				   ==> 1
-* key_step:        Step to get all the keys from first to last argument.
-                   For instance in MSET the step is two since arguments
-                   are key,val,key,val,...
-                   ==> 1
-* microseconds:    Microseconds of total execution time for this command.
-				   ==> 0
-* calls:           Total number of calls of this command.
-				   ==> 0
-* id:              Command bit identifier for ACLs or other goals.
-				   ==> 0
-
+* **name**: A string representing the command name. **==> "palindrome"**
+* **function**: Pointer to the C function implementing the command. **==> palindromeCommand**
+* **arity**: Number of arguments, it is possible to use -N to say >= N. **==> 2**
+* **sflags**: Command flags as string. See below for a table of flags. **==> "read-only fast @string"**
+* **flags**: Flags as bitmask. Computed by Redis using the 'sflags' field. **==> 0**
+* **get_keys_proc**: An optional function to get key arguments from a command. This is only used when the following three fields are not enough to specify what arguments are keys. **==> NULL**
+* **first_key_index**: First argument that is a key. **==> 1**
+* **last_key_index**: Last argument that is a key. **==> 1**
+* **key_step**: Step to get all the keys from first to last argument. For instance in MSET the step is two since arguments are key,val,key,val,... **==> 1**
+* **microseconds**: Microseconds of total execution time for this command. **==> 0**
+* **calls**: Total number of calls of this command. **==> 0**
+* **id**: Command bit identifier for ACLs or other goals. **==> 0**
 * The **flags, microseconds and calls fields** are computed by Redis and should always
-  be set to zero (0).
+  be set to **zero (0)**.
+* Command flags are expressed using space separated strings, that are turned into actual flags by the **populateCommandTable()** function.
 
-
-* Command flags are expressed using space separated strings, that are turned
-* into actual flags by the populateCommandTable() function.
-
-**Below are the meaning of the flags, that we have used:**
+## Below are the meaning of the flags, that we have used
 ---
 
-* read-only:   All the non special commands just reading from keys without
-               changing the content, or returning other informations like
-               the TIME command. Special commands such administrative commands
-               or transaction related commands (multi, exec, discard, ...)
-               are not flagged as read-only commands, since they affect the
-               server or the connection in other ways.
-* fast:        Fast command: O(1) or O(log(N)) command that should never
-               delay its execution as long as the kernel scheduler is giving
-               us time. Note that commands that may trigger a DEL as a side
-               effect (like SET) are not fast commands.
+* **read-only**: All the non special commands just reading from keys without changing the content, or returning other informations like the TIME command. Special commands such administrative commands or transaction related commands (multi, exec, discard, ...) are not flagged as read-only commands, since they affect the server or the connection in other ways.
+* **fast**: Fast command: O(1) or O(log(N)) command that should never delay its execution as long as the kernel scheduler is giving us time. Note that commands that may trigger a DEL as a side effect (like SET) are not fast commands.
 
 * The following additional flags are only used in order to put commands
   in a specific ACL category. Commands can have multiple ACL categories.
@@ -216,7 +185,7 @@ struct redisCommand {
 ...
 ```
 
-After the command operates in some way, it returns a reply to the client, usually using `addReply()` or a
+After the command operates in some way, it returns a reply to the client, usually using **addReply()** or a
 similar function defined inside **redis/src/networking.c**. We will see this in action as we make progress.
 
 # Defining our palindrome command handler
@@ -242,13 +211,13 @@ void palindromeCommand(client *c) {
 ```
 
 We take in a connected client instance. Then we check if the key exists or not.
-If it exists, we get the value for the key and store it as a **redisObject** instance, else we send a **NULL** reply to the client (which is done for non-existant keys) from within the **lookupKeyReadOrReply** function itself. For more details, check out the **redis/src/db.c::lookupKeyReadOrReply** function.
+If it exists, we get the value for the key and store it as a **redisObject** instance, else we send a **NULL** reply to the client (which is done for non-existant keys) from within the **redis/src/db.c::lookupKeyReadOrReply** function itself.
 
 ```
 if ((o = lookupKeyReadOrReply(c, c->argv[1], shared.null[c->resp])) == NULL || ...) return;
 
 
-An Example Case:
+An Example Case (Key doesn't exist):
 ---------------
 
 127.0.0.1:6379> PALINDROME ghost
@@ -256,13 +225,13 @@ An Example Case:
 127.0.0.1:6379>
 ```
 
-If the key exists, it's well and good but we also need to check if we are dealing with the correct type of the object. Now, if we are expecting a string and instead retrieve a **redisDict** (HashMap) object, we should definitely not proceed. So that forms the second sanity in our **OR** conditional check. For additional details, check out the **redis/src/object.c::checkType** function.
+If the key exists, it's well and good but we also need to check if we are dealing with the correct type of the object. Now, if we are expecting a string and instead retrieve a **redisDict** (HashMap) object, we should definitely not proceed. So that forms the second sanity in our **<OR>** conditional check. For additional details, check out the **redis/src/object.c::checkType** function.
 
 ```
 if ( ... || checkType(c, o, OBJ_STRING)) return;
 
 
-An Example Case:
+An Example Case (Operation on wrong data type):
 ---------------
 
 127.0.0.1:6379> HMSET myhash field1 "Hello" field2 "World"
@@ -274,7 +243,7 @@ OK
 127.0.0.1:6379>
 ```
 
-Any new function that we introduce, needs the function signature (or prototype) defined in the `redis/src/server.h` header file. So lets add the the command handler function's prototype there.
+Any new function that we introduce, needs the function signature (or prototype) defined in the **redis/src/server.h** header file. So lets add the the command handler function's prototype there.
 
 > **redis/src/server.h**
 
@@ -291,7 +260,7 @@ void palindromeCommand(client *c);
 
 Now, let's get to the heart of the topic. The command handler needs to call the below function **stringObjectPalindrome** to check if the string value is a palindrome or not?
 
-Again, we would need to add the function signature to the `redis/src/server.h` header file like before. So, let's get that out of the way first.
+Again, we would need to add the function signature to the **redis/src/server.h** header file like before. So, let's get that out of the way first.
 
 > **redis/src/server.h**
 
@@ -318,7 +287,7 @@ void stringObjectPalindrome(client *c, robj *o) {
     serverAssertWithInfo(NULL, o, o->type == OBJ_STRING);
 
     sds value;
-    size_t string_length, tail_pointer;
+    size_t string_length, tail_pointer, idx;
 
     if (sdsEncodedObject(o)) {
         value = o->ptr;
@@ -329,13 +298,20 @@ void stringObjectPalindrome(client *c, robj *o) {
         value = (sds)buf;
     }
 
-    tail_pointer = string_length - 1;
+    if (string_length <= 0) {
+        addReplyBulkCString(c, "false");
+        return;
+    }
 
-    for (size_t idx=0; idx < string_length; idx++) {
+    tail_pointer = string_length - 1;
+    idx = 0;
+
+    while (idx < tail_pointer) {
         if (value[idx] != value[tail_pointer]) {
             addReplyBulkCString(c, "false");
             return;
         }
+        idx++;
         tail_pointer--;
     }
 
@@ -346,34 +322,38 @@ void stringObjectPalindrome(client *c, robj *o) {
 ...
 ```
 
-The function definition takes in an **robj** instance (an **SDS** object that represents a string in the redis world). We also need the **client** object as we need to send back the reply to the connected session.
+The function definition takes in an **robj** instance (in our case which is an **SDS** object that represents a string in the redis world). We also need the **client** object as we need to send back the reply to the connected session.
 
-**What's happening here?!**
+## What's happening here?!
 ---
 
 * First we have an assert call that checks whether we are dealing with the correct data type. In our case, we see if the object type is actually a string. Nothing fancy here.
 * Next up, we declare a bunch of variables that would be needed when checking for a palindrome.
-* `sds` is the Redis string wrapper over normal c strings. It is a struct that has other members defined that provides much efficiency at run-time. An sds is of type char *
-* The next if / else block checks if we the string is encoded as an `sds` object or not. The else part deals with converting the object to an sds encoded string. String values that represent numeric entities need to be transformed to the correct sds encoded data type. We do this using the function **ll2string**. This function also returns the length of the newly converted string object and type casts it into an `sds` object. For additional details, check out the **redis/src/util.c::ll2string** function in the redis source code.
-* If the object is already `sds` encoded, we can directly find the length of the string using the `sdslen` library function.
+* **sds** is the Redis string wrapper over normal c strings. It is a struct that has other members defined that provides much efficiency at run-time. An sds is of type **char \***
+* The next if / else block checks if we the string is encoded as an **sds** object or not. The else part deals with converting the object to an **sds** encoded string. String values that represent numeric entities need to be transformed to the correct **sds** encoded data type. We do this using the function **ll2string**. This function also returns the length of the newly converted string object and type casts it into an **sds** object. For additional details, check out the **redis/src/util.c::ll2string** function in the redis source code.
+* If the object is already **sds** encoded, we can directly find the length of the string using the **sdslen** library function.
 * What follows next is the typical palindrome check logic. Check the characters in each end of the string, one iteration at a time.
-* Now the important part here is replying back to the client that issued the command. For this, we use one of the many variants for replying namely, **redis/src/networking.c::addReplyBulkCString**. The usage is quite straightforward. We pass the client object that was provided as an argument to the calling function and a C string literal. Thats it, we have added a new redis command 👏!
+* Now the important part here is replying back to the client that issued the command.
+* For this, we use one of the many variants for replying namely, **redis/src/networking.c::addReplyBulkCString**. The usage is quite straightforward.
+* We pass the client object that was provided as an argument to the **addReplyBulkCString** function and a C string literal.
+
+And that's it, we have added a new redis command 👏!
 
 # Are we done?
 ---
 
 Nothing is done actualy without writing some tests. And that's a fact! So, out experiment should be no less.
 
-Let's put together a few tests, that verify the behaviour of our newly added redis command. Redis tests are written in [Tcl (Tool Command Language)](https://github.com/redis/redis).
+Let's put together a few tests, that verify the behaviour of our newly added redis command. Redis tests are written in [Tcl (Tool Command Language)](https://en.wikipedia.org/wiki/Tcl).
 
 > **redis/tests/unit/type/string.tcl**
 
 ```
-	...
-	...
-	...
+    ...
+    ...
+    ...
 
-	test "PALINDROME against integer-encoded value" {
+    test "PALINDROME against integer-encoded value" {
         r set myinteger -9900
         assert_equal "false" [r palindrome myinteger]
         r set myinteger 1001
