@@ -225,7 +225,7 @@ An Example Case (Key doesn't exist):
 127.0.0.1:6379>
 ```
 
-If the key exists, it's well and good but we also need to check if we are dealing with the correct type of the object. Now, if we are expecting a string and instead retrieve a **redisDict** (HashMap) object, we should definitely not proceed. So that forms the second sanity in our **<OR>** conditional check. For additional details, check out the **redis/src/object.c::checkType** function.
+If the key exists, it's well and good but we also need to check if we are dealing with the correct type of the object. Now, if we are expecting a string and instead retrieve a **redisDict** (HashMap) object, we should definitely not proceed. So that forms the second sanity in our **OR** conditional check. For additional details, check out the **redis/src/object.c::checkType** function.
 
 ```
 if ( ... || checkType(c, o, OBJ_STRING)) return;
@@ -272,7 +272,7 @@ void stringObjectPalindrome(client *c, robj *o);
 ...
 ```
 
-Inside `redis/src/object.c`, there are all the functions that operate with Redis objects at a basic level, like functions to allocate new objects, handle the reference
+Inside **redis/src/object.c**, there are all the functions that operate with Redis objects at a basic level, like functions to allocate new objects, handle the reference
 counting and so forth.
 
 Below file is where we would want to define the core logic of our brand new command.
