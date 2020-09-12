@@ -342,7 +342,7 @@ And that's it, we have added a new redis command 👏!
 # Are we done?
 ---
 
-Nothing is done actualy without writing some tests. And that's a fact! So, out experiment should be no less.
+Nothing is done actualy without writing some tests. And that's a fact! So, our experiment should be no less.
 
 Let's put together a few tests, that verify the behaviour of our newly added redis command. Redis tests are written in [Tcl (Tool Command Language)](https://en.wikipedia.org/wiki/Tcl).
 
