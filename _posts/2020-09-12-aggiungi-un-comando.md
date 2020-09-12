@@ -539,6 +539,7 @@ OK
 * [Though old, but a redis internals classic](https://www.pauladamsmith.com/articles/redis-under-the-hood.html)
 
 ## Other String Command Ideas:
+---
 
 * Command to find the Longest Palindromic Substring in a string.
 * Command to retrieve the Longest Substring Without Duplication from a string.
@@ -547,6 +548,13 @@ Other programming problems that deal with other data structures are also ideal c
 
 Redis being a datastructure server, serves as a good platform to apply DS & Algo problems. Also, you become
 familiar with the internals of a widely popular open-source software. I would say, "It's a win-win".
+
+# Github Branch
+---
+
+The feature branch can be found in my fork of the Redis repository:
+
+* [Palindrome Command](https://github.com/dipAch/redis/tree/feature-palindrome)
 
 # Outro
 ---
