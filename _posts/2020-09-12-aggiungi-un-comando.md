@@ -442,7 +442,7 @@ bash-5.0#
 bash-5.0#
 ```
 
-It's also a good idea to run the tests (post running **make**), and verify that all as well as our newly added tests are passing.
+It's also a good idea to run the tests (post running **make**), and verify that all including our newly added tests are passing.
 
 ```
 bash-5.0# 
