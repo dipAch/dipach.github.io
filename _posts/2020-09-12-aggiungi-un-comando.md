@@ -521,13 +521,13 @@ OK
 ## Other String Command Ideas:
 ---
 
-* Command to find the Longest Palindromic Substring in a string.
-* Command to retrieve the Longest Substring Without Duplication from a string.
+* Command to find the *Longest Palindromic Substring* in a string.
+* Command to retrieve the *Longest Substring Without Duplication* from a string.
 
 Other programming problems that deal with other data structures are also ideal candidates.
 
-Redis being a datastructure server, serves as a good platform to apply DS & Algo problems. Also, you become
-familiar with the internals of a widely popular open-source software. I would say, "It's a win-win".
+Redis being a datastructure server, serves as a good platform to apply **DS & Algo** problems. Also, you become
+familiar with the internals of a widely popular open-source software. I would say, **"It's a win-win"**.
 
 # Github Branch
 ---
