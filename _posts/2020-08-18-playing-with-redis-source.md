@@ -1,7 +1,7 @@
 ---
 layout: post
 title: a date with redis
-tags: [redis, deep-dive]
+tags: [redis, build-from-source]
 ---
 
 
