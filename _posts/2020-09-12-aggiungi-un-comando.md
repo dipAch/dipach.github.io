@@ -21,7 +21,7 @@ Let us add a new command that will check whether a given key of type **string** 
 
 An important Redis data structure is the one defining a client. The structure has many fields, and below are some of the members:
 
-> **redis/src/server.h**
+> **[redis/src/server.h](https://github.com/redis/redis/blob/unstable/src/server.h)**
 
 ```
 ...
@@ -56,7 +56,7 @@ The client structure defines a **Connected Client**:
 
 As you can see in the client structure above, arguments in a command are described as **robj** structures. The following is the full **robj** structure, which defines a **Redis Object**:
 
-> **redis/src/server.h**
+> **[redis/src/server.h](https://github.com/redis/redis/blob/unstable/src/server.h)**
 
 ```
 ...
@@ -87,9 +87,9 @@ Finally the **ptr** field points to the actual representation of the object, whi
 # Registering a new command
 ---
 
-All redis commands are defined inside **redis/src/server.c** in an array of structs called the **redisCommandTable**. We will add our new command entry inside this command table array like so,
+All redis commands are defined inside **[redis/src/server.c](https://github.com/redis/redis/blob/unstable/src/server.c)** in an array of structs called the **redisCommandTable**. We will add our new command entry inside this command table array like so,
 
-> **redis/src/server.c**
+> **[redis/src/server.c](https://github.com/redis/redis/blob/unstable/src/server.c)**
 
 ```
 ...
@@ -113,7 +113,7 @@ struct redisCommand redisCommandTable[] = {
 
 The global variable **redisCommandTable** defines all the Redis commands, specifying the name of the command, the function implementing the command (a.k.a the **handler**), the number of arguments required, and other properties of each command.
 
-In the above example, **2** is the number of arguments the command takes, while **"read-only fast @string"** are the command flags as documented in the command table's top comment, inside **redis/src/server.c**.
+In the above example, **2** is the number of arguments the command takes, while **"read-only fast @string"** are the command flags as documented in the command table's top comment, inside **[redis/src/server.c](https://github.com/redis/redis/blob/unstable/src/server.c)**.
 
 ## Anatomy of the command struct
 ---
@@ -132,7 +132,7 @@ In the above example, **2** is the number of arguments the command takes, while 
 * **id**: Command bit identifier for ACLs or other goals. **==> 0**
 * The **flags, microseconds and calls fields** are computed by Redis and should always
   be set to **zero (0)**.
-* Command flags are expressed using space separated strings, that are turned into actual flags by the **populateCommandTable()** function.
+* Command flags are expressed using space separated strings, that are turned into actual flags by the **[populateCommandTable()](https://github.com/redis/redis/blob/unstable/src/server.c)** function.
 
 ## Below are the meaning of the sflags
 ---
@@ -154,7 +154,7 @@ In the above example, **2** is the number of arguments the command takes, while 
 The C struct that constitutes a redis command is extracted below. The below members map to the above field
 descriptions and is easily comprehensible (assisted by code comments).
 
-> **redis/src/server.h**
+> **[redis/src/server.h](https://github.com/redis/redis/blob/unstable/src/server.h)**
 
 ```
 ...
@@ -186,14 +186,14 @@ struct redisCommand {
 ```
 
 After the command operates, it returns a reply to the client, usually using **addReply()** or a
-similar function defined inside **redis/src/networking.c**. We will see this in action as we make progress.
+similar function defined inside **[redis/src/networking.c](https://github.com/redis/redis/blob/unstable/src/networking.c)**. We will see this in action as we make progress.
 
 # Defining our palindrome command handler
 ---
 
 Redis commands handlers (entry-points) are defined in the following way:
 
-> **redis/src/t_string.c**
+> **[redis/src/t_string.c](https://github.com/redis/redis/blob/unstable/src/t_string.c)**
 
 ```
 ...
@@ -211,7 +211,7 @@ void palindromeCommand(client *c) {
 ```
 
 Above function takes the instance of a connected client. First, we check if the key exists or not.
-If it exists, we get the value for the key and store it as a **redisObject** instance, else we send a **NULL** reply to the client (which is done for non-existent keys) from within the **redis/src/db.c::lookupKeyReadOrReply** function itself.
+If it exists, we get the value for the key and store it as a **redisObject** instance, else we send a **NULL** reply to the client (which is done for non-existent keys) from within the **[redis/src/db.c::lookupKeyReadOrReply](https://github.com/redis/redis/blob/unstable/src/db.c)** function itself.
 
 ```
 if ((o = lookupKeyReadOrReply(c, c->argv[1], shared.null[c->resp])) == NULL || ...) return;
@@ -225,7 +225,7 @@ An Example Case (Key doesn't exist):
 127.0.0.1:6379>
 ```
 
-If the key exists, next we check if we are dealing with the correct type of the object. Now, if we are expecting a string and instead retrieve a **redisDict** (HashMap) object, we should definitely not proceed. So that forms the second sanity in our **OR** conditional check. For additional details, check out the **redis/src/object.c::checkType** function.
+If the key exists, next we check if we are dealing with the correct type of the object. Now, if we are expecting a string and instead retrieve a **redisDict** (HashMap) object, we should definitely not proceed. So that forms the second sanity in our **OR** conditional check. For additional details, check out the **[redis/src/object.c::checkType](https://github.com/redis/redis/blob/unstable/src/object.c)** function.
 
 ```
 if ( ... || checkType(c, o, OBJ_STRING)) return;
@@ -243,9 +243,9 @@ OK
 127.0.0.1:6379>
 ```
 
-Any new function that we introduce needs the function signature (prototype) defined in the **redis/src/server.h** header file. So let us add the the command handler function's prototype there.
+Any new function that we introduce needs the function signature (prototype) defined in the **[redis/src/server.h](https://github.com/redis/redis/blob/unstable/src/server.h)** header file. So let us add the the command handler function's prototype there.
 
-> **redis/src/server.h**
+> **[redis/src/server.h](https://github.com/redis/redis/blob/unstable/src/server.h)**
 
 ```
 ...
@@ -260,9 +260,9 @@ void palindromeCommand(client *c);
 
 Now, let's get to the heart of the topic. The command handler needs to call the below function **stringObjectPalindrome** to check if the string value is a palindrome or not.
 
-Again, we would need to add the function signature to the **redis/src/server.h** header file like before. So, let's get that out of the way first.
+Again, we would need to add the function signature to the **[redis/src/server.h](https://github.com/redis/redis/blob/unstable/src/server.h)** header file like before. So, let's get that out of the way first.
 
-> **redis/src/server.h**
+> **[redis/src/server.h](https://github.com/redis/redis/blob/unstable/src/server.h)**
 
 ```
 ...
@@ -272,12 +272,12 @@ void stringObjectPalindrome(client *c, robj *o);
 ...
 ```
 
-**redis/src/object.c**, contains all the functions that operate with Redis objects at a basic level, like functions to allocate new objects, handle the reference
+**[redis/src/object.c](https://github.com/redis/redis/blob/unstable/src/object.c)**, contains all the functions that operate with Redis objects at a basic level, like functions to allocate new objects, handle the reference
 counting and so forth.
 
 The below file is where we would want to define the core logic of our brand new command.
 
-> **redis/src/object.c**
+> **[redis/src/object.c](https://github.com/redis/redis/blob/unstable/src/object.c)**
 
 ```
 ...
@@ -330,11 +330,11 @@ The function definition takes in an **robj** instance (in our case an **SDS** ob
 * First, we have an assert call that checks if we are dealing with the correct data type. In our case, we see if the object type is actually a string. Nothing fancy here.
 * Next up, we declare a bunch of variables that are required when checking for a palindrome.
 * **sds** is the Redis string wrapper over normal C strings. It is a struct that has other members defined and provides good efficiency at run-time. An sds is of type **(char \*)**.
-* The next if / else block checks if the string is encoded as an **sds** object or not. The **else** part deals with converting the object to an **sds** encoded string. String values that represent numeric entities need to be transformed to the correct **sds** encoded data type. We do this using the function **ll2string**. This function also returns the length of the newly converted string object and typecasts it into an **sds** object. For additional details, check out the **redis/src/util.c::ll2string** function in the redis source code.
+* The next if / else block checks if the string is encoded as an **sds** object or not. The **else** part deals with converting the object to an **sds** encoded string. String values that represent numeric entities need to be transformed to the correct **sds** encoded data type. We do this using the function **ll2string**. This function also returns the length of the newly converted string object and typecasts it into an **sds** object. For additional details, check out the **[redis/src/util.c::ll2string](https://github.com/redis/redis/blob/unstable/src/util.c)** function in the redis source code.
 * If the object is already **sds** encoded, we can directly find the length of the string using the **sdslen** library function.
 * What follows next is the typical palindrome check logic. Check the characters in each end of the string, one iteration at a time.
 * Now the important part here is replying back to the client that issued the command.
-* For this, we use one of the many variants for replying, namely, **redis/src/networking.c::addReplyBulkCString**. The usage is quite straightforward.
+* For this, we use one of the many variants for replying, namely, **[redis/src/networking.c::addReplyBulkCString](https://github.com/redis/redis/blob/unstable/src/networking.c)**. The usage is quite straightforward.
 * We pass the client object that was provided as an argument to the **addReplyBulkCString** function and a C string literal.
 
 And that's it, we have added a new redis command 👏!
@@ -346,7 +346,7 @@ No code is complete without writing some tests. And that's a fact! So, our exper
 
 Let's put together a few tests that verify the behaviour of our newly added redis command. Redis tests are written in [Tcl (Tool Command Language)](https://en.wikipedia.org/wiki/Tcl).
 
-> **redis/tests/unit/type/string.tcl**
+> **[redis/tests/unit/type/string.tcl](https://github.com/redis/redis/blob/unstable/tests/unit/type/string.tcl)**
 
 ```
     ...
