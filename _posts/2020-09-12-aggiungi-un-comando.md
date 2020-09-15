@@ -527,7 +527,7 @@ OK
 Programming problems that deal with other data structures are also ideal candidates.
 
 Redis, being a datastructure server, serves as a good platform to apply **DS & Algo** problems. Also, you become
-familiar with the internals of a widely popular open-source software. So, I would say, **It's a win-win!**.
+familiar with the internals of a widely popular open-source software. So, I would say, **It's a win-win!**
 
 # Github Branch
 ---
