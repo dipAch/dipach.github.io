@@ -211,7 +211,7 @@ void palindromeCommand(client *c) {
 ```
 
 Above function takes the instance of a connected client. First, we check if the key exists or not.
-If it exists, we get the value for the key and store it as a **redisObject** instance, else we send a **NULL** reply to the client (which is done for non-existent keys) from within the **[redis/src/db.c::lookupKeyReadOrReply](https://github.com/redis/redis/blob/unstable/src/db.c)** function itself.
+If it exists, we get the value for the key and store it as a **redisObject** instance, else we send a **NULL** reply to the client (which is done for non-existent keys) from within the **[lookupKeyReadOrReply](https://github.com/redis/redis/blob/unstable/src/db.c)** function itself.
 
 ```
 if ((o = lookupKeyReadOrReply(c, c->argv[1], shared.null[c->resp])) == NULL || ...) return;
@@ -225,7 +225,7 @@ An Example Case (Key doesn't exist):
 127.0.0.1:6379>
 ```
 
-If the key exists, next we check if we are dealing with the correct type of the object. Now, if we are expecting a string and instead retrieve a **redisDict** (HashMap) object, we should definitely not proceed. So that forms the second sanity in our **OR** conditional check. For additional details, check out the **[redis/src/object.c::checkType](https://github.com/redis/redis/blob/unstable/src/object.c)** function.
+If the key exists, next we check if we are dealing with the correct type of the object. Now, if we are expecting a string and instead retrieve a **redisDict** (HashMap) object, we should definitely not proceed. So that forms the second sanity in our **OR** conditional check. For additional details, check out the **[checkType](https://github.com/redis/redis/blob/unstable/src/object.c)** function.
 
 ```
 if ( ... || checkType(c, o, OBJ_STRING)) return;
@@ -330,11 +330,11 @@ The function definition takes in an **robj** instance (in our case an **SDS** ob
 * First, we have an assert call that checks if we are dealing with the correct data type. In our case, we see if the object type is actually a string. Nothing fancy here.
 * Next up, we declare a bunch of variables that are required when checking for a palindrome.
 * **sds** is the Redis string wrapper over normal C strings. It is a struct that has other members defined and provides good efficiency at run-time. An sds is of type **(char \*)**.
-* The next if / else block checks if the string is encoded as an **sds** object or not. The **else** part deals with converting the object to an **sds** encoded string. String values that represent numeric entities need to be transformed to the correct **sds** encoded data type. We do this using the function **ll2string**. This function also returns the length of the newly converted string object and typecasts it into an **sds** object. For additional details, check out the **[redis/src/util.c::ll2string](https://github.com/redis/redis/blob/unstable/src/util.c)** function in the redis source code.
+* The next if / else block checks if the string is encoded as an **sds** object or not. The **else** part deals with converting the object to an **sds** encoded string. String values that represent numeric entities need to be transformed to the correct **sds** encoded data type. We do this using the function **ll2string**. This function also returns the length of the newly converted string object and typecasts it into an **sds** object. For additional details, check out the **[ll2string](https://github.com/redis/redis/blob/unstable/src/util.c)** function in the redis source code.
 * If the object is already **sds** encoded, we can directly find the length of the string using the **sdslen** library function.
 * What follows next is the typical palindrome check logic. Check the characters in each end of the string, one iteration at a time.
 * Now the important part here is replying back to the client that issued the command.
-* For this, we use one of the many variants for replying, namely, **[redis/src/networking.c::addReplyBulkCString](https://github.com/redis/redis/blob/unstable/src/networking.c)**. The usage is quite straightforward.
+* For this, we use one of the many variants for replying, namely, **[addReplyBulkCString](https://github.com/redis/redis/blob/unstable/src/networking.c)**. The usage is quite straightforward.
 * We pass the client object that was provided as an argument to the **addReplyBulkCString** function and a C string literal.
 
 And that's it, we have added a new redis command 👏!
