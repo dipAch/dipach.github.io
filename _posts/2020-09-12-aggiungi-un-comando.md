@@ -23,6 +23,7 @@ An important Redis data structure is the one defining a client. The structure ha
 
 > **[redis/src/server.h](https://github.com/redis/redis/blob/unstable/src/server.h)**
 
+{% highlight c linenos %}
 ```
 ...
 ...
@@ -43,6 +44,7 @@ struct client {
 ...
 ...
 ```
+{% endhighlight %}
 
 The client structure defines a **Connected Client**:
 
