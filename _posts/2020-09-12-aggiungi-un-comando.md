@@ -23,8 +23,7 @@ An important Redis data structure is the one defining a client. The structure ha
 
 > **[redis/src/server.h](https://github.com/redis/redis/blob/unstable/src/server.h)**
 
-{% highlight c linenos %}
-```
+```c
 ...
 ...
 
@@ -44,7 +43,6 @@ struct client {
 ...
 ...
 ```
-{% endhighlight %}
 
 The client structure defines a **Connected Client**:
 
@@ -60,7 +58,7 @@ As you can see in the client structure above, arguments in a command are describ
 
 > **[redis/src/server.h](https://github.com/redis/redis/blob/unstable/src/server.h)**
 
-```
+```c
 ...
 ...
 
@@ -93,7 +91,7 @@ All redis commands are defined inside **[redis/src/server.c](https://github.com/
 
 > **[redis/src/server.c](https://github.com/redis/redis/blob/unstable/src/server.c)**
 
-```
+```c
 ...
 ...
 
@@ -158,7 +156,7 @@ descriptions and is easily comprehensible (assisted by code comments).
 
 > **[redis/src/server.h](https://github.com/redis/redis/blob/unstable/src/server.h)**
 
-```
+```c
 ...
 ...
 
@@ -197,7 +195,7 @@ Redis commands handlers (entry-points) are defined in the following way:
 
 > **[redis/src/t_string.c](https://github.com/redis/redis/blob/unstable/src/t_string.c)**
 
-```
+```c
 ...
 ...
 
@@ -215,7 +213,7 @@ void palindromeCommand(client *c) {
 Above function takes the instance of a connected client. First, we check if the key exists or not.
 If it exists, we get the value for the key and store it as a **redisObject** instance, else we send a **NULL** reply to the client (which is done for non-existent keys) from within the **[lookupKeyReadOrReply](https://github.com/redis/redis/blob/unstable/src/db.c)** function itself.
 
-```
+```c
 if ((o = lookupKeyReadOrReply(c, c->argv[1], shared.null[c->resp])) == NULL || ...) return;
 
 
@@ -229,7 +227,7 @@ An Example Case (Key doesn't exist):
 
 If the key exists, next we check if we are dealing with the correct type of the object. Now, if we are expecting a string and instead retrieve a **redisDict** (HashMap) object, we should definitely not proceed. So that forms the second sanity in our **OR** conditional check. For additional details, check out the **[checkType](https://github.com/redis/redis/blob/unstable/src/object.c)** function.
 
-```
+```c
 if ( ... || checkType(c, o, OBJ_STRING)) return;
 
 
@@ -249,7 +247,7 @@ Any new function that we introduce needs the function signature (prototype) defi
 
 > **[redis/src/server.h](https://github.com/redis/redis/blob/unstable/src/server.h)**
 
-```
+```c
 ...
 ...
 void palindromeCommand(client *c);
@@ -266,7 +264,7 @@ Again, we would need to add the function signature to the **[redis/src/server.h]
 
 > **[redis/src/server.h](https://github.com/redis/redis/blob/unstable/src/server.h)**
 
-```
+```c
 ...
 ...
 void stringObjectPalindrome(client *c, robj *o);
@@ -281,7 +279,7 @@ The below file is where we would want to define the core logic of our brand new 
 
 > **[redis/src/object.c](https://github.com/redis/redis/blob/unstable/src/object.c)**
 
-```
+```c
 ...
 ...
 
@@ -350,7 +348,7 @@ Let's put together a few tests that verify the behaviour of our newly added redi
 
 > **[redis/tests/unit/type/string.tcl](https://github.com/redis/redis/blob/unstable/tests/unit/type/string.tcl)**
 
-```
+```c
     ...
     ...
     ...
@@ -401,7 +399,7 @@ bash-5.0#
 
 If you've compiled redis from source beforehand, it is a good idea to clean the previous build and start fresh. Run below **make** directive to do so,
 
-```
+```bash
 bash-5.0#
 bash-5.0# make distclean
 cd src && make distclean
@@ -415,7 +413,7 @@ bash-5.0#
 
 Build redis using the **make** directive with **CFLAGS** option set.
 
-```
+```bash
 bash-5.0#
 bash-5.0# pwd
 /webapps/redis
@@ -446,7 +444,7 @@ bash-5.0#
 
 It's also a good idea to run the tests (post running **make**) and verify that all tests are passing, including the newly-added tests.
 
-```
+```bash
 bash-5.0# 
 bash-5.0# make test
 cd src && make test
@@ -474,7 +472,7 @@ bash-5.0#
 **Test Drive:**
 ---
 
-```
+```bash
 $ docker exec -it project-root_go-app_1 bash
 bash-5.0#
 bash-5.0# cd /webapps/redis/
