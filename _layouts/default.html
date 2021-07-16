@@ -41,6 +41,13 @@
     </div>
 
     <div class="wrapper-footer">
+      {% if site.footer-links.site-status %}
+        <div class="status-page">
+          <a href="{{ site.footer-links.site-status.status-page-url }}">
+            <img src="{{ site.footer-links.site-status.status-page-logo }}" />
+          </a>
+        </div>
+      {% endif %}
       <div class="container">
         <footer class="footer">
           {% include svg-icons.html %}

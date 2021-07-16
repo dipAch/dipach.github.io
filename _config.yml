@@ -30,7 +30,9 @@ footer-links:
   stackoverflow: # your stackoverflow profile, e.g. "users/50476/bart-kiers"
   youtube: # channel/<your_long_string> or user/<user-name>
   googleplus: # anything in your profile username that comes after plus.google.com/
-  sitestatus: https://www.freshworks.com/static-assets/images/common/company/logos/logo-fstatus-black.svg
+  site-status:
+    status-page-url: https://github-415.freshstatus.io
+    status-page-logo: https://www.freshworks.com/static-assets/images/common/company/logos/logo-fstatus-black.svg
 
 
 # Enter your Disqus shortname (not your username) to enable commenting on posts
