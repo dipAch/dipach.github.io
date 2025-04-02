@@ -30,9 +30,9 @@ class Node {
 
 The given node will have a value of 0. You need to return a copy of this node as a reference to the cloned graph.
 
-### Images
+### Example
 You can add images using markdown syntax:
-![Clone Graph Representation](/images/clone-graph.svg.jpg)
+![Clone Graph Representation](/images/clone-graph.svg)
 
 ### Solution
 ```java
@@ -82,10 +82,3 @@ class Solution {
 
 ## Conclusion
 Wrap up your post with a conclusion that summarizes the key points.
-
----
-Feel free to modify this template according to your needs. Remember to:
-1. Change the title in the front matter
-2. Add relevant tags
-3. Replace the placeholder content with your actual content
-4. Add any images you want to use to the `images` directory 
