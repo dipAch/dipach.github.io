@@ -12,7 +12,7 @@ Along the way, I came across few interesting problems that highlight some import
 
 Below is one such problem.
 
-## Clone a Graph
+## Problem Statement
 
 You are given the reference of a node in a connected undirected graph.
 Return a deep copy (clone) of the graph.
