@@ -31,7 +31,7 @@ The given node will have a value of 0. You need to return a copy of this node as
 ### Example
 ![Clone Graph Representation](/images/clone-graph.svg)
 
-### Solution
+## Solution
 ```java
 /* This is the Node class definition
 class Node {
@@ -77,4 +77,11 @@ class Solution {
 - Space: O(V)
 
 ## Conclusion
-Wrap up your post with a conclusion that summarizes the key points.
+So, in this problem we start by creating the clone of the original node that is currently being processed and store this mapping.
+
+We also add all the neighbouring nodes for future processing in the queue.
+
+> Why we need this mapping?
+As we are traversing the original nodes and want to build the cloned neighbour set/list, we will need a handle to the cloned equivalent for each of the neighbouring nodes.
+
+We do this for every node, until the queue is empty (signifying all reachable nodes are processed).
