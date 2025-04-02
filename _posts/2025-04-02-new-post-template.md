@@ -31,7 +31,6 @@ class Node {
 The given node will have a value of 0. You need to return a copy of this node as a reference to the cloned graph.
 
 ### Example
-You can add images using markdown syntax:
 ![Clone Graph Representation](/images/clone-graph.svg)
 
 ### Solution
@@ -48,30 +47,29 @@ public
 class Solution {
 	
     Node cloneGraph(Node node) {
-        // add your code here
-		Queue<Node> queue = new LinkedList<>();
-		Map<Node, Node> originalToClone = new HashMap<>();
-		queue.offer(node);
-		
-		while (!queue.isEmpty()) {
-			Node currNode = queue.poll();
-			originalToClone.putIfAbsent(currNode, new Node(currNode.value));
-			Node clonedNode = originalToClone.get(currNode);
-			
-			for (Node neighbor : currNode.neighbors) {
-				Node clonedNeighbor = originalToClone.putIfAbsent(
-					neighbor, new Node(neighbor.value));
-				
-				if (clonedNeighbor == null) {
-					clonedNeighbor = originalToClone.get(neighbor);
-					queue.offer(neighbor);
-				}
-				
-				clonedNode.neighbors.add(clonedNeighbor);
-			}
-		}
-		
-		return originalToClone.get(node);
+        Queue<Node> queue = new LinkedList<>();
+        Map<Node, Node> originalToClone = new HashMap<>();
+        queue.offer(node);
+
+        while (!queue.isEmpty()) {
+            Node currNode = queue.poll();
+            originalToClone.putIfAbsent(currNode, new Node(currNode.value));
+            Node clonedNode = originalToClone.get(currNode);
+            
+            for (Node neighbor : currNode.neighbors) {
+                Node clonedNeighbor = originalToClone.putIfAbsent(
+                    neighbor, new Node(neighbor.value));
+                
+                if (clonedNeighbor == null) {
+                    clonedNeighbor = originalToClone.get(neighbor);
+                    queue.offer(neighbor);
+                }
+                
+                clonedNode.neighbors.add(clonedNeighbor);
+            }
+        }
+
+        return originalToClone.get(node);
     }
 }
 ```
