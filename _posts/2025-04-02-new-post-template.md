@@ -4,8 +4,6 @@ title: Clone a Graph
 tags: [graph, algorithms]
 ---
 
-## Introduction
-
 Having worked close to a decade in software engineering, recently I went back to one of my favorite areas in computer science application - Graphs
 
 Along the way, I came across few interesting problems that highlight some important aspects of graph traversals.
