@@ -6,7 +6,7 @@ tags: [graph, dfs, algorithms]
 
 ## Problem Statement
 
-You are given a 2-D matrix surface of size n*m. Each cell of the surface is either 1 (land) or 0 (water).
+You are given a 2-D matrix surface of size `n x m`. Each cell of the surface is either 1 (land) or 0 (water).
 Find the number of islands on the surface.
 
 An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. Assume all four edges of the surface are all surrounded by water.
@@ -76,7 +76,7 @@ Let's break down how this solution works:
 
 2. **Main Loop**:
    - We iterate through each cell in the grid using nested loops
-   - For each cell, we check two conditions:
+   - For each cell, we check **two conditions**:
      - `visited[i][j] == 0`: The cell hasn't been visited yet
      - `surface[i][j] == 1`: The cell is land (part of an island)
    - When both conditions are true, we've found a new island:
