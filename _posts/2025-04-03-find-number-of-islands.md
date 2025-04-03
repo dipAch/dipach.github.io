@@ -4,12 +4,15 @@ title: Number of Islands
 tags: [graph, dfs, algorithms]
 ---
 
+Can you bring out the `Robinson Crusoe` in you and help explore the number of islands?
+
 ## Problem Statement
 
-You are given a 2-D matrix surface of size `n x m`. Each cell of the surface is either 1 (land) or 0 (water).
-Find the number of islands on the surface.
+You are given a 2-D matrix surface of size `n x m`. Each cell of the surface is either **1 (land) or 0 (water)**.
 
 An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. Assume all four edges of the surface are all surrounded by water.
+
+Can you find the number of islands on the surface?
 
 ### Example
 
