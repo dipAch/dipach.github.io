@@ -4,6 +4,8 @@ title: Number of Islands
 tags: [graph, dfs, algorithms]
 ---
 
+“Thus fear of danger is ten thousand times more terrifying than danger itself.”
+
 Can you bring out the `Robinson Crusoe` in you and help explore the number of islands?
 
 ## Problem Statement
