@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Understanding Serializability, Strict Serializability, and Linearizability in Databases
+title: understanding serializability, strict serializability, and linearizability
 tags: [databases, concurrency, distributed-systems]
 ---
 
@@ -53,7 +53,13 @@ The final state (A=$80, B=$120) is equivalent to executing T1 followed by T2 seq
 
 ## Strict Serializability
 
+Simply put, combining serializability and linearizability yields strict serializability. But what does that even mean?
+
 Strict Serializability adds an important constraint to basic serializability: the order of operations must respect their real-time ordering. This means that if operation A completes before operation B starts, then A must appear before B in the serial order.
+
+Hence, with strict serializability, transaction behavior is equivalent to some serial execution, and the serial order corresponds to real time.
+
+For example, say we begin and commit transaction T1, which writes to item x, and later begin and commit transaction T2, which reads from x. A database providing strict serializability for these transactions will place T1 before T2 in the serial ordering, and T2 will read T1’s write. A database providing serializability (but not strict serializability) could order T2 before T1.
 
 ### Example: Online Shopping System
 
@@ -73,7 +79,7 @@ In a strictly serializable system:
 
 ### Key Points about Strict Serializability:
 - Maintains real-time ordering of operations
-- Provides stronger guarantees than basic serializability
+- Provides stronger guarantees than basic serializability, in essence upholds real-time ordering for any serial ordering of transactions
 - Ensures that operations respect their actual time of occurrence
 
 ## Linearizability

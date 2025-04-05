@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Clone a Graph
+title: clone a graph
 tags: [graph, algorithms]
 ---
 

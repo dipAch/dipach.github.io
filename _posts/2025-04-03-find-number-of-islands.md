@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Number of Islands
+title: number of islands
 tags: [graph, dfs, algorithms]
 ---
 
