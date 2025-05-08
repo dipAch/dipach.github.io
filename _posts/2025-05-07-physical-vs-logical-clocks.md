@@ -311,55 +311,55 @@ public class HybridLogicalClock {
 
 ## Comparison of Clock Types
 
-<table style="width:100%; border-collapse: collapse;">
+<table style="width:100%; border-collapse: collapse; border: 1px solid #ddd;">
 <tr>
-<th style="padding: 8px; text-align: left;">Feature</th>
-<th style="padding: 8px; text-align: center;">Physical Clock</th>
-<th style="padding: 8px; text-align: center;">Lamport Clock</th>
-<th style="padding: 8px; text-align: center;">Vector Clock</th>
-<th style="padding: 8px; text-align: center;">Hybrid Logical Clock</th>
+<th style="padding: 8px; text-align: left; border: 1px solid #ddd; background-color: #f5f5f5;">Feature</th>
+<th style="padding: 8px; text-align: center; border: 1px solid #ddd; background-color: #f5f5f5;">Physical Clock</th>
+<th style="padding: 8px; text-align: center; border: 1px solid #ddd; background-color: #f5f5f5;">Lamport Clock</th>
+<th style="padding: 8px; text-align: center; border: 1px solid #ddd; background-color: #f5f5f5;">Vector Clock</th>
+<th style="padding: 8px; text-align: center; border: 1px solid #ddd; background-color: #f5f5f5;">Hybrid Logical Clock</th>
 </tr>
 <tr>
-<td style="padding: 8px;">Precision</td>
-<td style="padding: 8px; text-align: center;">High</td>
-<td style="padding: 8px; text-align: center;">Low</td>
-<td style="padding: 8px; text-align: center;">Medium</td>
-<td style="padding: 8px; text-align: center;">High</td>
+<td style="padding: 8px; border: 1px solid #ddd;">Precision</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">High</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">Low</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">Medium</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">High</td>
 </tr>
 <tr>
-<td style="padding: 8px;">Causality</td>
-<td style="padding: 8px; text-align: center;">No</td>
-<td style="padding: 8px; text-align: center;">Partial</td>
-<td style="padding: 8px; text-align: center;">Complete</td>
-<td style="padding: 8px; text-align: center;">Complete</td>
+<td style="padding: 8px; border: 1px solid #ddd;">Causality</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">No</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">Partial</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">Complete</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">Complete</td>
 </tr>
 <tr>
-<td style="padding: 8px;">Space Complexity</td>
-<td style="padding: 8px; text-align: center;">O(1)</td>
-<td style="padding: 8px; text-align: center;">O(1)</td>
-<td style="padding: 8px; text-align: center;">O(n)</td>
-<td style="padding: 8px; text-align: center;">O(1)</td>
+<td style="padding: 8px; border: 1px solid #ddd;">Space Complexity</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">O(1)</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">O(1)</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">O(n)</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">O(1)</td>
 </tr>
 <tr>
-<td style="padding: 8px;">Message Overhead</td>
-<td style="padding: 8px; text-align: center;">Low</td>
-<td style="padding: 8px; text-align: center;">Low</td>
-<td style="padding: 8px; text-align: center;">High</td>
-<td style="padding: 8px; text-align: center;">Medium</td>
+<td style="padding: 8px; border: 1px solid #ddd;">Message Overhead</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">Low</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">Low</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">High</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">Medium</td>
 </tr>
 <tr>
-<td style="padding: 8px;">Implementation</td>
-<td style="padding: 8px; text-align: center;">Complex</td>
-<td style="padding: 8px; text-align: center;">Simple</td>
-<td style="padding: 8px; text-align: center;">Moderate</td>
-<td style="padding: 8px; text-align: center;">Complex</td>
+<td style="padding: 8px; border: 1px solid #ddd;">Implementation</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">Complex</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">Simple</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">Moderate</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">Complex</td>
 </tr>
 <tr>
-<td style="padding: 8px;">Real-time Ordering</td>
-<td style="padding: 8px; text-align: center;">Yes</td>
-<td style="padding: 8px; text-align: center;">No</td>
-<td style="padding: 8px; text-align: center;">No</td>
-<td style="padding: 8px; text-align: center;">Yes</td>
+<td style="padding: 8px; border: 1px solid #ddd;">Real-time Ordering</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">Yes</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">No</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">No</td>
+<td style="padding: 8px; text-align: center; border: 1px solid #ddd;">Yes</td>
 </tr>
 </table>
 
