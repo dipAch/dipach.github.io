@@ -311,14 +311,57 @@ public class HybridLogicalClock {
 
 ## Comparison of Clock Types
 
-| Feature | Physical Clock | Lamport Clock | Vector Clock | Hybrid Logical Clock |
-|:--------|:-------------:|:-------------:|:------------:|:-------------------:|
-| Precision | High | Low | Medium | High |
-| Causality | No | Partial | Complete | Complete |
-| Space Complexity | O(1) | O(1) | O(n) | O(1) |
-| Message Overhead | Low | Low | High | Medium |
-| Implementation | Complex | Simple | Moderate | Complex |
-| Real-time Ordering | Yes | No | No | Yes |
+<table style="width:100%; border-collapse: collapse;">
+<tr>
+<th style="padding: 8px; text-align: left;">Feature</th>
+<th style="padding: 8px; text-align: center;">Physical Clock</th>
+<th style="padding: 8px; text-align: center;">Lamport Clock</th>
+<th style="padding: 8px; text-align: center;">Vector Clock</th>
+<th style="padding: 8px; text-align: center;">Hybrid Logical Clock</th>
+</tr>
+<tr>
+<td style="padding: 8px;">Precision</td>
+<td style="padding: 8px; text-align: center;">High</td>
+<td style="padding: 8px; text-align: center;">Low</td>
+<td style="padding: 8px; text-align: center;">Medium</td>
+<td style="padding: 8px; text-align: center;">High</td>
+</tr>
+<tr>
+<td style="padding: 8px;">Causality</td>
+<td style="padding: 8px; text-align: center;">No</td>
+<td style="padding: 8px; text-align: center;">Partial</td>
+<td style="padding: 8px; text-align: center;">Complete</td>
+<td style="padding: 8px; text-align: center;">Complete</td>
+</tr>
+<tr>
+<td style="padding: 8px;">Space Complexity</td>
+<td style="padding: 8px; text-align: center;">O(1)</td>
+<td style="padding: 8px; text-align: center;">O(1)</td>
+<td style="padding: 8px; text-align: center;">O(n)</td>
+<td style="padding: 8px; text-align: center;">O(1)</td>
+</tr>
+<tr>
+<td style="padding: 8px;">Message Overhead</td>
+<td style="padding: 8px; text-align: center;">Low</td>
+<td style="padding: 8px; text-align: center;">Low</td>
+<td style="padding: 8px; text-align: center;">High</td>
+<td style="padding: 8px; text-align: center;">Medium</td>
+</tr>
+<tr>
+<td style="padding: 8px;">Implementation</td>
+<td style="padding: 8px; text-align: center;">Complex</td>
+<td style="padding: 8px; text-align: center;">Simple</td>
+<td style="padding: 8px; text-align: center;">Moderate</td>
+<td style="padding: 8px; text-align: center;">Complex</td>
+</tr>
+<tr>
+<td style="padding: 8px;">Real-time Ordering</td>
+<td style="padding: 8px; text-align: center;">Yes</td>
+<td style="padding: 8px; text-align: center;">No</td>
+<td style="padding: 8px; text-align: center;">No</td>
+<td style="padding: 8px; text-align: center;">Yes</td>
+</tr>
+</table>
 
 ## Best Practices
 
