@@ -23,9 +23,9 @@ Physical clocks are the actual hardware clocks present in each node of a distrib
 ### How Physical Clocks Work
 
 ```ascii
-                    ┌─────────────┐
-                    │  Quartz    │
-                    │  Crystal   │
+                    ┌───────────┐
+                    │  Quartz   │
+                    │  Crystal  │
                     └─────┬─────┘
                           │
                     ┌─────▼─────┐
