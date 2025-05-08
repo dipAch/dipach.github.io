@@ -312,7 +312,7 @@ public class HybridLogicalClock {
 ## Comparison of Clock Types
 
 | Feature | Physical Clock | Lamport Clock | Vector Clock | Hybrid Logical Clock |
-|---------|---------------|---------------|--------------|---------------------|
+|:--------|:-------------:|:-------------:|:------------:|:-------------------:|
 | Precision | High | Low | Medium | High |
 | Causality | No | Partial | Complete | Complete |
 | Space Complexity | O(1) | O(1) | O(n) | O(1) |
