@@ -4,8 +4,6 @@ title: "Vector Clocks vs Lamport Clocks: Understanding Event Ordering in Distrib
 tags: [distributed-systems, clocks, synchronization, lamport, vector-clocks, event-ordering]
 ---
 
-# Vector Clocks vs Lamport Clocks: Understanding Event Ordering in Distributed Systems
-
 In distributed systems, maintaining a consistent view of event ordering is crucial. While Lamport clocks provide a basic mechanism for ordering events, vector clocks offer a more sophisticated solution that can detect concurrent events and provide a more accurate representation of causality. This article explores the limitations of Lamport clocks and how vector clocks address these limitations.
 
 ## Table of Contents
