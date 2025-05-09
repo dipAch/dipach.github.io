@@ -4,8 +4,6 @@ title: understanding serializability, strict serializability, and linearizabilit
 tags: [databases, concurrency, distributed-systems]
 ---
 
-## Introduction
-
 In the world of databases and distributed systems, ensuring correct behavior when multiple operations happen concurrently is crucial. This post explores three fundamental concepts that help us understand and guarantee correct behavior in concurrent systems: **Serializability**, **Strict Serializability**, and **Linearizability**. We'll break down each concept with practical examples and explain how they differ from each other.
 
 Linearizability and serializability are both important properties about interleavings of operations in databases and distributed systems. In database context, interleavings are the ordering of operations that can happen in concurrent transactional systems.
