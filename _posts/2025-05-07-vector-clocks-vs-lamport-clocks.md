@@ -536,23 +536,6 @@ Commit C: [A:1, B:0, C:1]  ← Concurrent with B
 Commit D: [A:1, B:1, C:1]  ← Merges B and C
 ```
 
-## Conclusion
-
-Vector clocks provide a more sophisticated solution than Lamport clocks by:
-1. Accurately detecting concurrent events
-2. Maintaining true causality relationships
-3. Supporting partial ordering of events
-4. Enabling conflict detection in distributed systems
-
-The key advantage of vector clocks is their ability to distinguish between causally related and concurrent events, which is crucial for many distributed system applications.
-
-## References
-
-1. Lamport, L. (1978). "Time, Clocks, and the Ordering of Events in a Distributed System"
-2. Fidge, C. J. (1988). "Timestamps in Message-Passing Systems That Preserve the Partial Ordering"
-3. Mattern, F. (1989). "Virtual Time and Global States of Distributed Systems"
-4. Parker, D. S. et al. (1983). "Detection of Mutual Inconsistency in Distributed Systems"
-
 ## Practical Implementation Tips
 
 ### Choosing Between Lamport and Vector Clocks
@@ -597,4 +580,20 @@ The key advantage of vector clocks is their ability to distinguish between causa
    - Track clock drift
    - Monitor message delays
    - Log causal relationships
-``` 
+
+## Conclusion
+
+Vector clocks provide a more sophisticated solution than Lamport clocks by:
+1. Accurately detecting concurrent events
+2. Maintaining true causality relationships
+3. Supporting partial ordering of events
+4. Enabling conflict detection in distributed systems
+
+The key advantage of vector clocks is their ability to distinguish between causally related and concurrent events, which is crucial for many distributed system applications.
+
+## References
+
+1. Lamport, L. (1978). "Time, Clocks, and the Ordering of Events in a Distributed System"
+2. Fidge, C. J. (1988). "Timestamps in Message-Passing Systems That Preserve the Partial Ordering"
+3. Mattern, F. (1989). "Virtual Time and Global States of Distributed Systems"
+4. Parker, D. S. et al. (1983). "Detection of Mutual Inconsistency in Distributed Systems"
