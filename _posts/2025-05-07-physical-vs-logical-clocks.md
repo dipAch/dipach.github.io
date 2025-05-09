@@ -4,8 +4,6 @@ title: "Understanding Physical vs Logical Clocks in Distributed Systems"
 tags: [distributed-systems, clocks, synchronization, lamport, vector-clocks]
 ---
 
-# Understanding Physical vs Logical Clocks in Distributed Systems
-
 In distributed systems, maintaining a consistent notion of time across different nodes is a fundamental challenge. This article explores the concepts of physical and logical clocks, their differences, and how they help solve various distributed systems problems.
 
 ## Table of Contents
