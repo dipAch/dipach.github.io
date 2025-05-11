@@ -4,8 +4,6 @@ title: "Java's Random Class: Randomness in the air"
 tags: [java, random, programming]
 ---
 
-# Understanding Java's Random Class: A Comprehensive Guide
-
 Java's `Random` class provides a way to generate random numbers and is commonly used in various applications. This article explores the capabilities of the `Random` class, its methods, and practical examples of its usage.
 
 ## Table of Contents
