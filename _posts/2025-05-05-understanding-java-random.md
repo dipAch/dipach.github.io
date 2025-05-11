@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Understanding Java's Random Class: A Comprehensive Guide"
-tags: [java, random, programming, examples]
+title: "Java's Random Class: Randomness in the air"
+tags: [java, random, programming]
 ---
 
 # Understanding Java's Random Class: A Comprehensive Guide
