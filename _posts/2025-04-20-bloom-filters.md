@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Probabilistic Data Structure they say - Bloom Filters"
+title: "probabilistic data structure they say - Bloom Filters"
 date: 2025-04-20 12:00:00 +0000
 categories: [Data Structures, Algorithms]
 tags: [bloom-filter, probabilistic-data-structure, java]

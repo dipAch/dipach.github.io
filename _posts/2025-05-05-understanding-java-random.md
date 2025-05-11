@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Java's Random Class: Randomness in the air"
+title: "randomness in the air"
 tags: [java, random, programming]
 ---
 

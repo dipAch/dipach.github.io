@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Vector Clocks vs Lamport Clocks: Understanding Event Ordering in Distributed Systems"
+title: "vector clocks Vs lamport clocks: event ordering in distributed systems"
 tags: [distributed-systems, clocks, synchronization, lamport, vector-clocks, event-ordering]
 ---
 

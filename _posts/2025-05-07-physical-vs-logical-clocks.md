@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Understanding Physical vs Logical Clocks in Distributed Systems"
+title: "physical vs logical clocks in distributed systems"
 tags: [distributed-systems, clocks, synchronization, lamport, vector-clocks]
 ---
 
