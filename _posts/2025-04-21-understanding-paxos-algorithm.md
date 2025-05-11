@@ -4,8 +4,6 @@ title: "paxos algorithm primer"
 tags: [paxos, distributed-consensus]
 ---
 
-# Understanding the Paxos Algorithm: A Deep Dive into Distributed Consensus
-
 The Paxos algorithm, developed by Leslie Lamport, is one of the most fundamental algorithms in distributed systems. While many articles explain Paxos in theory, few address the practical challenges and nuances that make it both powerful and notoriously difficult to implement correctly. In this post, we'll explore not just how Paxos works, but why it works this way and what challenges you'll face when implementing it.
 
 ## Why Paxos Matters
