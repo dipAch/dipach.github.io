@@ -4,7 +4,7 @@ title: "diving in to Leach-Salz Version 4 UUIDs"
 tags: [uuid, java, distributed-systems]
 ---
 
-A UUID is a 128-bit value used to uniquely identify objects or entities in computer systems. The structure and interpretation of a UUID depend on its variant and version fields.
+An UUID is a 128-bit value used to uniquely identify objects or entities in computer systems. The structure and interpretation of a UUID depend on its variant and version fields.
 
 UUIDs (Universally Unique Identifiers) are essential in distributed systems for generating unique identifiers without central coordination. Among the various UUID versions, Leach-Salz version 4 (also known as random UUIDs) is one of the most widely used. In this post, we'll explore how they work, their implementation, and their real-world applications.
 
@@ -75,7 +75,7 @@ Where:
 
 ## How the Variant Is Encoded
 
-The variant of a UUID is determined by the value of the 17th hexadecimal digit in the UUID string (the first digit of the fourth group). This digit is sometimes called the N digit in the pattern:
+The variant of an UUID is determined by the value of the 17th hexadecimal digit in the UUID string (the first digit of the fourth group). This digit is sometimes called the N digit in the pattern:
 
 ```
 xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx
@@ -87,7 +87,7 @@ N: Variant
 
 The variant is encoded in the upper bits of this digit. For the Leach-Salz variant (RFC 4122/DCE 1.1), the variant bits are 10x (where x can be 0 or 1).
 
-### Why **a** Means Leach-Salz
+### Why <u>a</u> Means Leach-Salz
 
 Binary for hex **a**: **a** in hexadecimal is **1010** in binary.
 
