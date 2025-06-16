@@ -8,13 +8,13 @@ A transaction is a sequence of operations that are treated as a single unit of w
 
 ## That's fine for a heading -- but what is it, really?!
 
-A transaction is where several reads and writes are grouped together into a single logical unit so that they can be executed as one operation. The entire transaction will either succeed (commit) or fail (abort, rollback). Transactions allow for applications to not have to worry about partial failures and safely retry operations as databases provide these safety guarantees.
+A transaction is where several reads and writes are grouped together into a single logical unit so that they can be executed as one operation. The entire transaction will either succeed (**commit**) or fail (**abort**, **rollback**). Transactions allow for applications to not have to worry about partial failures and safely retry operations as databases provide these safety guarantees.
 
 At times, it is better to weaken transaction guarantees to increase performance or availability. Almost all relational databases and some nonrelational databases support transactions. In a relational database, everything between a **BEGIN TRANSACTION** and **COMMIT** statement is part of the same transaction. Many nonrelational databases do not provide a way to group operations together.
 
 ## ACID Properties
 
-Transactions provide safety guarantees, also known as **ACID: Atomicity, Consistency, Isolation, and Durability**. Databases that are not **ACID**-compliant are called **BASE: Basically Available, Soft State, and Eventual Consistency**.
+Transactions provide safety guarantees, also known as **ACID**: Atomicity, Consistency, Isolation, and Durability. Databases that are not **ACID**-compliant are called **BASE**: Basically Available, Soft State, and Eventual Consistency.
 
 ### Atomicity
 
