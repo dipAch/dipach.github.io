@@ -14,7 +14,7 @@ At times, it is better to weaken transaction guarantees to increase performance 
 
 ## ACID Properties
 
-Transactions provide safety guarantees, also known as **ACID**: Atomicity, Consistency, Isolation, and Durability. Databases that are not **ACID**-compliant are called **BASE**: Basically Available, Soft State, and Eventual Consistency.
+Transactions provide safety guarantees, also known as **ACID**: <u>Atomicity, Consistency, Isolation, and Durability</u>. Databases that are not **ACID**-compliant are called **BASE**: <u>Basically Available, Soft State, and Eventual Consistency</u>.
 
 ### Atomicity
 
