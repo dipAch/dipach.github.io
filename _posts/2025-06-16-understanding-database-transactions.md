@@ -10,19 +10,19 @@ A transaction is a sequence of operations that are treated as a single unit of w
 
 A transaction is where several reads and writes are grouped together into a single logical unit so that they can be executed as one operation. The entire transaction will either succeed (commit) or fail (abort, rollback). Transactions allow for applications to not have to worry about partial failures and safely retry operations as databases provide these safety guarantees.
 
-At times, it is better to weaken transaction guarantees to increase performance or availability. Almost all relational databases and some nonrelational databases support transactions. In a relational database, everything between a BEGIN TRANSACTION and COMMIT statement is part of the same transaction. Many nonrelational databases do not provide a way to group operations together.
+At times, it is better to weaken transaction guarantees to increase performance or availability. Almost all relational databases and some nonrelational databases support transactions. In a relational database, everything between a **BEGIN TRANSACTION** and **COMMIT** statement is part of the same transaction. Many nonrelational databases do not provide a way to group operations together.
 
 ## ACID Properties
 
-Transactions provide safety guarantees, also known as ACID: Atomicity, Consistency, Isolation, and Durability. Databases that are not ACID-compliant are called BASE: Basically Available, Soft State, and Eventual Consistency.
+Transactions provide safety guarantees, also known as **ACID: Atomicity, Consistency, Isolation, and Durability**. Databases that are not **ACID**-compliant are called **BASE: Basically Available, Soft State, and Eventual Consistency**.
 
 ### Atomicity
 
-Atomicity is the ability to abort a transaction on error and undo any writes that have been made so far. Abortability would have been better to describe the A in ACID.
+Atomicity is the ability to abort a transaction on error and undo any writes that have been made so far. **Abortability** would have been better to describe the **A** in **ACID**.
 
 This is not to be confused with atomic operation in multi-threaded programming. An atomic operation is where if one thread executes an atomic operation, another thread could not see half-finished results from that operation.
 
-Atomicity can be implemented using a log such as B-trees for crash recovery.
+Atomicity is implemented using a transaction log (also called write-ahead log or WAL). This log records all changes before they are applied to the actual data. If a crash occurs, the database can use this log to either complete partially committed transactions (redo) or undo changes from failed transactions (undo). When data structures like B-trees are modified, these changes are also recorded in the transaction log, ensuring that all modifications can be rolled back if a transaction fails.
 
 ```sql
 BEGIN TRANSACTION;
@@ -45,10 +45,10 @@ This is not to be confused with replica consistency and eventual consistency (re
 Isolation is where each transaction running concurrently with other transactions cannot interfere with each other. When transactions have been committed, the result should be identical to if they were run one after another (serially) even if they were run concurrently.
 
 Different isolation levels:
-  - READ UNCOMMITTED
-  - READ COMMITTED
-  - REPEATABLE READ (SNAPSHOT ISOLATION)
-  - SERIALIZABLE
+  - **READ UNCOMMITTED**
+  - **READ COMMITTED**
+  - **REPEATABLE READ** (**SNAPSHOT ISOLATION**)
+  - **SERIALIZABLE**
 
 ### Durability
 
@@ -95,13 +95,13 @@ Some other databases refer to snapshot isolation with a different name. In Oracl
 
 Snapshot isolation is usually implemented with multi-version concurrency control (MVCC). The database will keep several different committed versions of an object as various in-progress transactions need to read database state at different points in time. Each transaction is always given a unique, always-incrementing transaction ID.
 
-##### Modifications
+#### Modifications
 
 Whenever a write occurs, the data is tagged with the writer's transaction ID. Whenever a transaction reads from the database, any writes made by transactions with a later transaction ID are ignored.
 
 A garbage collection process will periodically remove old object versions when they are no longer visible to any transactions.
 
-##### Deletions
+#### Deletions
 
 Whenever a transaction deletes data, the row isn't actually deleted. Instead, it is marked for deletion by setting the deleted_by field to the transaction ID.
 
@@ -111,7 +111,7 @@ A garbage collection process will periodically delete objects marked for deletio
 
 Lost updates are when two transactions concurrently read an object, modify it, and write back the modified object (read-modify-write cycle). One of the modifications is lost as the second write does not include the first modification. The later write clobbers the earlier write.
 
-##### Atomic Update Operations
+#### Atomic Update Operations
 
 To prevent lost updates, many databases provide atomic update operations. Applications are expected to use atomic updates instead of read-modify-write cycles. For example, the following is a standard update instruction in relational databases:
 
@@ -121,11 +121,11 @@ UPDATE counters SET value = value + 1 WHERE key = 'foo'
 
 Atomic updated operations are implemented by acquiring an exclusive lock on the object when it is read until the update has been committed (cursor stability). This prevents other transactions from reading the same object. Relational databases, Redis, and MongoDB provide atomic updates.
 
-##### Automatic Detection
+#### Automatic Detection
 
 Another solution is to have a transaction manager that detects lost updates. If one occurs, the transaction manager will abort the offending transaction and force it to retry its read-modify-write cycle. Snapshot isolation needs to be enabled for this check to be implemented efficiently. PostgreSQL, Oracle, and SQL Server snapshot isolation levels automatically detect when a lost update has occurred and abort the offending transaction. MySQL (InnoDB) does not automatically detect lost updates.
 
-##### Conflict Resolution (Replication)
+#### Conflict Resolution (Replication)
 
 Replicated databases allow concurrent writes to create several conflicting versions of an object (siblings). These databases use application code or special data structures to resolve and merge these versions afterwards.
 
@@ -260,4 +260,4 @@ Remember:
 1. [PostgreSQL Documentation - Transactions](https://www.postgresql.org/docs/current/tutorial-transactions.html)
 2. [MySQL Documentation - Transaction Statements](https://dev.mysql.com/doc/refman/8.0/en/commit.html)
 3. [Oracle Documentation - Transaction Management](https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/transactions.html) 
-4. Kleppmann, Martin. “Chapter 7: Transactions.” In [Designing Data-Intensive Applications: The Big Ideas behind Reliable, Scalable, and Maintainable Systems](https://www.amazon.com/Designing-Data-Intensive-Applications-Reliable-Maintainable/dp/1449373321). Sebastopol, CA: O'Reilly Media, 2017.
+4. Kleppmann, Martin. "Chapter 7: Transactions." In [Designing Data-Intensive Applications: The Big Ideas behind Reliable, Scalable, and Maintainable Systems](https://www.amazon.com/Designing-Data-Intensive-Applications-Reliable-Maintainable/dp/1449373321). Sebastopol, CA: O'Reilly Media, 2017.
