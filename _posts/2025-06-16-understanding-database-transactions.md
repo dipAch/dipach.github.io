@@ -71,17 +71,23 @@ Dirty reads are where one transaction reads another transaction's writes before 
 
 Most databases prevent dirty reads by remembering both the old committed value and the new value set by the transaction that currently holds the write lock. While a transaction is ongoing, other transactions that read the object are given the old value. Once a new value is committed, transactions switch over to reading the new value.
 
+![Dirty Reads](/images/transactions-dirty-reads.png)
+
 Read locks are rarely used as it harms the response time for read-only transactions. One long write transaction can force many read-only transactions to wait until the write transaction is completed.
 
 #### Dirty Writes
 
 Dirty writes are where a transaction overwrites uncommitted data of an in-progress transaction. The database needs to delay the second transaction's write until the first transaction's write completes.
 
+![Dirty Writes](/images/transactions-dirty-writes.png)
+
 Most databases prevent dirty writes by using row-level locks. When a transaction wants to modify an object (row or document), it must first acquire a lock on that object. The lock is held until the transaction is committed or aborted. Other transactions that want to modify the object must wait until the lock is released.
 
 #### Read Skew (Nonrepeatable Reads)
 
 Read skew happens when a transaction is writing to multiple objects and in parallel, a second transaction reads the new data in some objects and old data in other objects. This causes the second transaction to see inconsistencies in the database.
+
+![Read Skew](/images/transactions-read-skew.png)
 
 Read committed isolation doesn't prevent read skew (nonrepeatable reads). This is solved by snapshot isolation.
 
@@ -94,6 +100,8 @@ Some other databases refer to snapshot isolation with a different name. In Oracl
 #### Multi-Version Concurrency Control (MVCC)
 
 Snapshot isolation is usually implemented with multi-version concurrency control (MVCC). The database will keep several different committed versions of an object as various in-progress transactions need to read database state at different points in time. Each transaction is always given a unique, always-incrementing transaction ID.
+
+![MVCC](/images/transactions-SI-mvcc.png)
 
 #### Modifications
 
@@ -132,6 +140,8 @@ Replicated databases allow concurrent writes to create several conflicting versi
 #### Write Skew
 
 Write skew happens when a transaction reads an object, makes a decision based on the data, and writes its decision to the database. However, by the time the decision is committed, another transaction has changed the initially-read object causing the premise of the decision to be false. Snapshot isolation doesn't prevent write skew. Only serializable isolation prevents write skew.
+
+![Write Skew](/images/transactions-write-skew.png)
 
 #### Phantoms
 
