@@ -121,7 +121,7 @@ There are 2 categories of checkpointing explained in the text:
 
 1. **Quiescent Checkpointing**
 
-    What is the objective?
+    > What is the objective?
 
     - We want to know where in the log we can stop scanning further backwards. This needs guarantee that after a certain point, all records going back belong to completed transactions.
     - For all such transactions, the data buffers were flushed to disk and we don't have to engage in a "Redo" activity.
@@ -132,7 +132,7 @@ There are 2 categories of checkpointing explained in the text:
 
 2. **Non-Quiescent Checkpointing**
 
-    So the problem with previous checkpointing method (Quiescent), was that the database was rendered unresponsive till the checkpointing completes. This could have serious performance implications for high traffic database nodes.
+    So the problem with previous checkpointing method (**Quiescent**), was that the database was rendered unresponsive till the checkpointing completes. This could have serious performance implications for high traffic database nodes.
 
     To overcome this, we have another method that keeps track of the running transactions when the checkpoint process started. It records the list of transactions as part of its checkpoint log record.
 
