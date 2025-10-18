@@ -8,6 +8,7 @@ This is a continuation of Edward Sciore's text on "Database Design and Implement
 in a database system. It tries to capture the key aspects and design principles that drive the operational guarantees provided with respect to data correctness and prevention of data corruption.
 
 ## What is a Recovery Manager?
+---
 
 Recovery manager's sole responsibility lies in bringing the database system to a logically sane state in the course of both normal and abnormal operations. It uses the means of a transaction log to verify what changes will stay and which ones need to be undone.
 
@@ -15,11 +16,12 @@ In order to perform it's job with clarity, it is responsible for appending any t
 
 Recovery manager can be called on demand by a participating transaction (commit/rollback delegation) or it could be invoked as part of the database startup ritual (after a crash or even during first boot).
 
-### Key Responsibilities
+## Key Responsibilities
+---
 
 As a core component in upholding database safety, it majorly encompass below tasks:
 
-1. Manage Transaction Log:
+* **Manage Transaction Log:**
 
 We can have mainly below categories of loggable work,
     - Start of a transaction
@@ -38,7 +40,7 @@ We can have mainly below categories of loggable work,
     <ROLLBACK, tx3>
     ```
 
-2. Transaction Rollback:
+* **Transaction Rollback:**
 
 The recovery manager can be called to rollback a specified transaction Tx. In order to rollback, the recorvery manager needs to undo all of
 Tx's modifications (if any).
@@ -48,7 +50,7 @@ the old values for each update operation.
 
 Also the recovery manager reads the log from the end and not from beginning. We move from end of log to the record that marks the start of the transaction Tx. All update records for Tx will be reverted as we go backwards.
 
-3. System Recovery:
+* **System Recovery:**
 
 This basically involves the Undo-Redo recovery maneuver. We want to undo, incomplete transaction's work and we want to make committed transaction's work durable.
 
@@ -59,6 +61,7 @@ Once the log records are scanned till the top (Phase 1), it starts moving downwa
 This process is done during database system startup to enforce correctness in terms of atomicity (revert incomplete or half done work) and durability (persist what was deemed complete to the client).
 
 ## Recovery Variants
+---
 
 Let's have a quick glance at the possible recovery types,
 
@@ -95,6 +98,7 @@ Well it is faster as we only care about transactions that have a committed log e
 On the not so bright side though, this will increase buffer contention as transactions might hold onto modified buffers pinning them for longer than usual.
 
 ## Write-Ahead Logging (WAL)
+---
 
 Just a fancy term that tells what was most likely modified in a durable fashion. Whether the actual modification reached the disk or not is secondary.
 
@@ -108,32 +112,33 @@ Hence, the concept of WAL says that before flushing any modification in the data
 
 The log entry has a corresponding LSN (Log Sequence Number) that the buffer keep tracks of it internally. When a flush request comes in, it makes the log manager flush up until the current LSN tracked by the buffer, marking changes/modifications up until the LSN as pushed to disk.
 
-### Checkpointing
+## Checkpointing
+---
 
 This concept vastly reduces the work needed to be done by the recovery manager and also the amount of past data in log records that needs maintaining.
 
 There are 2 categories of checkpointing explained in the text:
 
-1. Quiescent Checkpointing
+1. **Quiescent Checkpointing**
 
-What is the objective?
+    What is the objective?
 
-- We want to know where in the log we can stop scanning further backwards. This needs guarantee that after a certain point, all records going back belong to completed transactions.
-- For all such transactions, the data buffers were flushed to disk and we don't have to engage in a "Redo" activity.
+    - We want to know where in the log we can stop scanning further backwards. This needs guarantee that after a certain point, all records going back belong to completed transactions.
+    - For all such transactions, the data buffers were flushed to disk and we don't have to engage in a "Redo" activity.
 
-This is basically a stop the world checkpointing. In this method, when the checkpointing process kicks in, it stops accpeting any new transactions and waits for already running transactions to complete. Once running transactions complete and their modified buffers are flushed, a checkpoint log record is added and then the log is flushed. Normal operation resumes post that.
+    This is basically a stop the world checkpointing. In this method, when the checkpointing process kicks in, it stops accpeting any new transactions and waits for already running transactions to complete. Once running transactions complete and their modified buffers are flushed, a checkpoint log record is added and then the log is flushed. Normal operation resumes post that.
 
-Usually performed at startup when recovery is done, so that only new log records post the checkpoint marker are to be considered by the recovery manager in the future.
+    Usually performed at startup when recovery is done, so that only new log records post the checkpoint marker are to be considered by the recovery manager in the future.
 
-2. Non-Quiescent Checkpointing
+2. **Non-Quiescent Checkpointing**
 
-So the problem with previous checkpointing method (Quiescent), was that the database was rendered unresponsive till the checkpointing completes. This could have serious performance implications for high traffic database nodes.
+    So the problem with previous checkpointing method (Quiescent), was that the database was rendered unresponsive till the checkpointing completes. This could have serious performance implications for high traffic database nodes.
 
-To overcome this, we have another method that keeps track of the running transactions when the checkpoint process started. It records the list of transactions as part of its checkpoint log record.
+    To overcome this, we have another method that keeps track of the running transactions when the checkpoint process started. It records the list of transactions as part of its checkpoint log record.
 
-This method also stops accepting new transactions albeit for a short period only, as this method doesn't have to wait for running transactions to complete.
+    This method also stops accepting new transactions albeit for a short period only, as this method doesn't have to wait for running transactions to complete.
 
-Basically the recovery manager relies on finding the earliest transaction's start log record in the checkpoint record's transaction list, so that it can stop scanning backwards any futher post that.
+    Basically the recovery manager relies on finding the earliest transaction's start log record in the checkpoint record's transaction list, so that it can stop scanning backwards any futher post that.
 
 ## Conclusion
 
