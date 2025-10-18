@@ -115,16 +115,16 @@ The log entry has a corresponding LSN (Log Sequence Number) that the buffer keep
 ## Checkpointing
 ---
 
+> What is the objective?
+
+    - We want to know where in the log we can stop scanning further backwards. This needs guarantee that after a certain point, all records going back belong to completed transactions. So, no need of "Undo" activity on those transactions (**Atomicity Guarantee**).
+    - For all such transactions, the data buffers were flushed to disk and we don't have to engage in a "Redo" activity (**Durability Guarantee**).
+
 This concept vastly reduces the work needed to be done by the recovery manager and also the amount of past data in log records that needs maintaining.
 
 There are 2 categories of checkpointing explained in the text:
 
 1. **Quiescent Checkpointing**
-
-    > What is the objective?
-
-    - We want to know where in the log we can stop scanning further backwards. This needs guarantee that after a certain point, all records going back belong to completed transactions.
-    - For all such transactions, the data buffers were flushed to disk and we don't have to engage in a "Redo" activity.
 
     This is basically a stop the world checkpointing. In this method, when the checkpointing process kicks in, it stops accpeting any new transactions and waits for already running transactions to complete. Once running transactions complete and their modified buffers are flushed, a checkpoint log record is added and then the log is flushed. Normal operation resumes post that.
 
