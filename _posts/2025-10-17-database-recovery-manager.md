@@ -116,9 +116,8 @@ The log entry has a corresponding LSN (Log Sequence Number) that the buffer keep
 ---
 
 > What is the objective?
-
-    - We want to know where in the log we can stop scanning further backwards. This needs guarantee that after a certain point, all records going back belong to completed transactions. So, no need of "Undo" activity on those transactions (**Atomicity Guarantee**).
-    - For all such transactions, the data buffers were flushed to disk and we don't have to engage in a "Redo" activity (**Durability Guarantee**).
+- We want to know where in the log we can stop scanning further backwards. This needs guarantee that after a certain point, all records going back belong to completed transactions. So, no need of "Undo" activity on those transactions (**Atomicity Guarantee**).
+- For all such transactions, the data buffers were flushed to disk and we don't have to engage in a "Redo" activity (**Durability Guarantee**).
 
 This concept vastly reduces the work needed to be done by the recovery manager and also the amount of past data in log records that needs maintaining.
 
