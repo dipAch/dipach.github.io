@@ -42,13 +42,13 @@ We can have mainly below categories of loggable work,
 
 * **Transaction Rollback:**
 
-The recovery manager can be called to rollback a specified transaction Tx. In order to rollback, the recorvery manager needs to undo all of
-Tx's modifications (if any).
+The recovery manager can be called to rollback a specified transaction **Tx**. In order to rollback, the recorvery manager needs to undo all of
+**Tx**'s modifications (if any).
 
 The recovery manager needs to follow the update category of log records for the transaction, which contains the details of the modifications. It needs to restore
 the old values for each update operation.
 
-Also the recovery manager reads the log from the end and not from beginning. We move from end of log to the record that marks the start of the transaction Tx. All update records for Tx will be reverted as we go backwards.
+Also the recovery manager reads the log from the end and not from beginning. We move from end of log to the record that marks the start of the transaction **Tx**. All update records for **Tx** will be reverted as we go backwards.
 
 * **System Recovery:**
 
@@ -56,9 +56,9 @@ This basically involves the Undo-Redo recovery maneuver. We want to undo, incomp
 
 The recovery manager starts from the bottom of the log, i.e., from the most recent log record and goes backwards/upwards.
 
-Once the log records are scanned till the top (Phase 1), it starts moving downward now for its second pass to perform the redo operation (Phase 2).
+Once the log records are scanned till the top (**Phase 1**), it starts moving downward now for its second pass to perform the redo operation (**Phase 2**).
 
-This process is done during database system startup to enforce correctness in terms of atomicity (revert incomplete or half done work) and durability (persist what was deemed complete to the client).
+This process is done during database system startup to enforce correctness in terms of atomicity (**revert** incomplete or half done work) and durability (**persist** what was declared complete to the client).
 
 ## Recovery Variants
 ---
@@ -135,20 +135,25 @@ There are 2 categories of checkpointing explained in the text:
 
     To overcome this, we have another method that keeps track of the running transactions when the checkpoint process started. It records the list of transactions as part of its checkpoint log record.
 
-    This method also stops accepting new transactions albeit for a short period only, as this method doesn't have to wait for running transactions to complete.
+    This method also stops accepting new transactions albeit for a short period only, as this method doesn't have to wait for already running transactions to complete.
+
+    It basically tracks the currently running transactions, flushes all modified buffers. Don't worry, any incomplete transaction's operations will be undone during recovery.
+
+    Then it goes to add the checkpoint record and flush the log file to disk. It will start accepting new transactions again.
 
     Basically the recovery manager relies on finding the earliest transaction's start log record in the checkpoint record's transaction list, so that it can stop scanning backwards any futher post that.
 
 ## Conclusion
+---
 
 Recovery management might seem like one of those behind-the-scenes components that you don't think about until something goes wrong. But as we've seen, it's the safety net that keeps your database from turning into a chaotic mess when things inevitably go sideways.
 
-The beauty of recovery managers lies in their simplicity of purpose—keep what's committed, undo what's not. Whether you're dealing with undo-only recovery for speed, redo-only for safety, or the full undo-redo approach for complete coverage, the core principle remains the same: use the log to maintain sanity.
+The beauty of recovery managers lies in their simplicity of purpose—keep what's committed, undo what's not. Whether you're dealing with **undo-only** recovery for speed, **redo-only** for safety, or the full **undo-redo** approach for complete coverage, the core principle remains the same: use the log to maintain sanity.
 
-Write-Ahead Logging isn't just a best practice—it's the foundation that makes recovery possible in the first place.
+**Write-Ahead Logging** isn't just a best practice—it's the foundation that makes recovery possible in the first place.
 
-And checkpointing? That's what keeps your recovery process from having to replay the entire history of your database every time something crashes.
+And **Checkpointing**? That's what keeps your recovery process from having to replay the entire history of your database every time something crashes.
 
 Next time your database comes back up after an unexpected shutdown and everything just works, you can thank the recovery manager doing its quiet, essential job in the background.
 
-Hope this breakdown made the recovery manager's role a bit clearer. Until next time!
+Hope this breakdown made the **Recovery Manager**'s role a bit clearer. Until next time!
