@@ -110,7 +110,7 @@ WAL helps the recovery manager to know what changes (if any) were done by incomp
 
 Hence, the concept of WAL says that before flushing any modification in the data buffer to disk, one must write and flush the log entry for that modification.
 
-The log entry has a corresponding LSN (Log Sequence Number) that the buffer keep tracks of it internally. When a flush request comes in, it makes the log manager flush up until the current LSN tracked by the buffer, marking changes/modifications up until the LSN as pushed to disk.
+The log entry has a corresponding **LSN (Log Sequence Number)** that the buffer keep tracks of it internally. When a flush request comes in, it makes the log manager flush up until the **current LSN** tracked by the buffer, marking changes/modifications up until the **LSN** as pushed to disk.
 
 ## Checkpointing
 ---
