@@ -87,11 +87,11 @@ And we are done. Simple, right?
 
 ### Redo-Only Recovery
 
-Hmmm ... what do you think we do in this? We basically try to avoid doing any "Undo" operations. We only aim at asserting committed transactions remain durable and their modifications are not lost, in case there is any disgraceful (too strong a word, but still) shutdown.
+Hmmm ... what do you think we do in this? We basically try to avoid doing any **"Undo"** operations. We only aim at asserting committed transactions remain durable and their modifications are not lost, in case there is any <u>disgraceful</u> (too strong a word, but still) shutdown.
 
-But how do we ensure that we don't need to do any undo operations? Well for starters, we don't allow writing/flushing buffers until a transaction completes (commit/rollback). Basically keep the buffer pinned.
+But how do we ensure that we don't need to do any undo operations? Well for starters, we don't allow writing/flushing buffers until a transaction completes (**commit/rollback**). Basically keep the buffer pinned.
 
-Recall either we explicitly flush a data buffer (on comit/rollback) or it gets flushed when replacing with a new disk block (provided it is unpinned). The buffer manager does not let any pinned buffer to be replaced or associated to a new disk block.
+Recall either we explicitly flush a data buffer (on **comit/rollback**) or it gets flushed when replacing with a new disk block (provided it is **unpinned**). The buffer manager does not let any pinned buffer to be replaced or associated to a new disk block.
 
 Well it is faster as we only care about transactions that have a committed log entry. Ignores other transactions that are incomplete or rolledback.
 
@@ -102,7 +102,7 @@ On the not so bright side though, this will increase buffer contention as transa
 
 Just a fancy term that tells what was most likely modified in a durable fashion. Whether the actual modification reached the disk or not is secondary.
 
-Why is this necessary??
+>Why is this **even necessary**?
 
 In order to undo any incomplete transaction's modifications, we need to know what and where the modification happened. Without that information the recovery manager is helpless.
 
