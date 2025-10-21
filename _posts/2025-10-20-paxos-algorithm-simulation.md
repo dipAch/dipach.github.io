@@ -13,6 +13,11 @@ Whether you **agree or disagree**, I'll leave the best to you 😜
 
 Being an avid follower of DRY principle, I would encourage the reader to refer to my previous post on the topic @ **[Paxos Primer](https://dipach.github.io/understanding-paxos-algorithm/)**
 
+## The Code
+---
+
+The code for the simulation program can be found @ **[Paxos Simulation](https://github.com/dipAch/paxos-simulation)**
+
 ## Simulation Components
 ---
 
@@ -465,11 +470,6 @@ After the first round's outcome is committed in hostory, we will test the durabi
 ```
 
 See the monotonic increase in the **promisedN** and **acceptedN** values above, while the **acceptedValue** remains the same.
-
-## The Code
----
-
-The code for the simulation program can be found @ **[Paxos Simulation](https://github.com/dipAch/paxos-simulation)**
 
 ## Conclusion
 ---
