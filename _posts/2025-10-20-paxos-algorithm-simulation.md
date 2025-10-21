@@ -11,7 +11,7 @@ Whether you **agree or disagree**, I'll leave the best to you 😜
 ## What is Paxos?
 ---
 
-Being an avid follower of DRY principle, I would encourage the reader to refer to my previous post on the topic @ **[Paxos Primer](https://dipach.github.io/understanding-paxos-algorithm/)**
+Being an avid follower of **DRY** principle, I would encourage the reader to refer to my **[previous post](https://dipach.github.io/understanding-paxos-algorithm/)** on the topic.
 
 ## The Code
 ---
@@ -431,7 +431,7 @@ Now that a value has been decided in consortium, we will propagate that decision
 
 > **New Independent Round**
 
-After the first round's outcome is committed in hostory, we will test the durability of the decision. Will will initiate a new round that tries to challenge the previous value. But we can see that after much hula-hoop, it will override its new value with the previously accepted data value (or the learned value).
+After the first round's outcome is committed in history, we will test the durability of the decision. Will will initiate a new round that tries to challenge the previous value. But we can see that after much hula-hoop, it will override its new value with the previously accepted data value (or the learned value).
 
 ```
 ===== A new round after commit =====
