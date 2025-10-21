@@ -71,7 +71,7 @@ The learners are additional nodes that don't participate in the voting process n
 
 So far so good.
 
-### **PREPARE:**
+### **PREPARE Phase:**
 ---
 
 Firstly, Paxos solves the problem of unanimously arriving at a decision, by a majority voting play.
@@ -192,7 +192,7 @@ So, a proposal number can keep on increasing motonically, but if a value is alre
 
 Still there with me?
 
-### **ACCEPT:**
+### **ACCEPT Phase:**
 ---
 
 **Acceptors** have 2 roles to play, largely:
@@ -251,7 +251,7 @@ Once the responses for the accept requests are received and depending on quorum 
 
 And with that we can say that the cluster has reached a consensus for a particular round. In Multi-Paxos, this could mean deciding the value for a particular slot.
 
-### **Learners:**
+### **COMMIT Phase:**
 ---
 
 Learners are the outcome consumers for a decision. Once a decision is majority accepted, the same is propagated to the learners set.
