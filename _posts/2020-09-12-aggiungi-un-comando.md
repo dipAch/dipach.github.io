@@ -1,6 +1,6 @@
 ---
 layout: post
-title: solving palindrome
+title: redis internals -- solving palindrome
 tags: [redis, deep-dive, algorithms]
 ---
 
