@@ -180,7 +180,7 @@ HAS_ALL_COLUMNS 0x20  all schema columns present — no subset bitmap needed
 EXTENSION_FLAG  0x80  a second flags byte follows
 ```
 
-Your `"first"` row had `HAS_TIMESTAMP | HAS_ALL_COLUMNS` — no TTL, no deletion, one column present. That's a tight encoding.
+Look back at the `sstabledump` output for the `"first"` row — it had `liveness_info` (a timestamp) and one cell, no TTL, no deletion. That maps directly to `HAS_TIMESTAMP | HAS_ALL_COLUMNS`. No other flag bits set, no subset bitmap written, no extra fields — just clustering, size, timestamp delta, and the one cell value.
 
 Two design decisions here that matter:
 
