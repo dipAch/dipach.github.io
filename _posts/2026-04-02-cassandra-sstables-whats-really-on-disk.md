@@ -197,8 +197,6 @@ To skip a row during a compaction scan, Cassandra reads just the size vint and j
 
 **`previousUnfilteredSize` enables backward scans.** Each row stores the size of the *previous* row on disk, written by the `serialize()` method in `UnfilteredSerializer`. To scan backwards (for `ORDER BY DESC` queries), Cassandra reads the previous size and seeks back — no separate reverse index needed.
 
-> If you add a new field to the row format, you must handle both the SSTable path (with `row_size`) and the on-wire path (hints, streaming, without `row_size`). The divergence is an `isForSSTable()` branch inside `serialize()`.
-
 ## SerializationHeader — the schema snapshot
 ---
 
@@ -225,24 +223,42 @@ public long readTimestamp(DataInputPlus in) throws IOException {
 
 Timestamps in a single SSTable are usually close together, so the delta is small — fits in 1–2 bytes as a vint instead of always 8. Same pattern for TTL and `localDeletionTime`. This is the `EncodingStats minTimestamp: 1773499798599939` you saw. The baseline is the smallest timestamp across the SSTable, or across all input SSTables during compaction.
 
-**Dropped column handling** — the `toHeader()` method in `SerializationHeader.Component`:
+If you ever add a time-based field to a row header, you'd follow this same pattern — a `write*/read*` pair in `SerializationHeader`, a new field in `EncodingStats` for the baseline, and a bump to the SSTable version string.
+
+**Dropped column handling** — SSTables are immutable. The live schema isn't. When you `ALTER TABLE DROP COLUMN`, old SSTables on disk still contain cells for that column. Cassandra needs to read those files without crashing — and discard the dropped data without resurrecting it.
+
+When loading an old SSTable, `SerializationHeader` is read from `Statistics.db` and its column list is reconciled against the live schema. For any column that no longer exists, Cassandra looks it up in `TableMetadata.droppedColumns` — a map preserved in the schema at drop time. Each entry is a `DroppedColumn` (`<cassandra-package>/schema/DroppedColumn.java`), which holds two things:
 
 ```java
-ColumnMetadata column = metadata.getColumn(name);
-if (column == null || column.isStatic() != isStatic) {
-    column = metadata.getDroppedColumn(name, isStatic);
-    if (column == null)
-        throw new UnknownColumnException(...);
-}
+public final ColumnMetadata column;    // original type info — needed to deserialize the bytes
+public final long droppedTime;         // when the DROP happened, in microseconds
 ```
 
-When loading an old SSTable whose column was since `DROP`ped, Cassandra creates a fake `ColumnMetadata` from the dropped column registry. The cell data is read and silently discarded. Without this, a single `ALTER TABLE DROP COLUMN` would make every old SSTable unreadable.
+The `ColumnMetadata` is needed to deserialize the cell bytes correctly — you can't skip bytes you don't know the size of. The `droppedTime` is the safety mechanism: any cell whose timestamp is older than `droppedTime` is discarded on read. This matters if you drop a column and then re-add one with the same name — without `droppedTime`, cells from the old column could silently bleed into the new one.
 
-The full chain on read:
+You can see this play out live. Add a column, write data, flush, then drop it:
 
-<img src="/images/sstable-read-chain-repr.png" alt="SSTable read chain" width="500" height="150"/>
+```sql
+ALTER TABLE lab.events ADD notes text;
+INSERT INTO events (id, ts, data, notes)
+VALUES (uuid(), toTimestamp(now()), 'with-notes', 'some note');
+```
 
-If you ever add a time-based field to a row, you'd add a `write*/read*` pair here, update `EncodingStats`, and bump the SSTable version string.
+```bash
+bin/nodetool flush lab events
+tools/bin/sstabledump data/data/lab/events-*/pa-*-Data.db
+```
+
+The `notes` cell is there in the dump. Now drop it:
+
+```sql
+ALTER TABLE lab.events DROP notes;
+SELECT * FROM lab.events;   -- notes column absent from results
+```
+
+Run `sstabledump` again on the same file — the cell is **still in `Data.db`**. The drop only changed the live schema. The SSTable on disk is untouched.
+
+Compaction is what actually purges it. After a `nodetool compact`, `sstabledump` will show the `notes` cell is gone — the compaction writer, knowing the column is dropped and `droppedTime` is in the past, simply doesn't copy it into the new SSTable.
 
 ## Conclusion
 ---
