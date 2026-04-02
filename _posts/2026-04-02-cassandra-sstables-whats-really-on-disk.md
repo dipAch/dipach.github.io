@@ -11,7 +11,7 @@ We'll flush real data, inspect every component, and trace the row encoding down 
 ## The setup
 ---
 
-Before we look at anything, let's produce a real SSTable to work with. Fire up a single node (IntelliJ or CCM), then in `cqlsh`:
+Before we look at anything, let's produce a real SSTable to work with. Fire up a single node (IntelliJ or CCM) from project root, then in `cqlsh`:
 
 ```sql
 CREATE KEYSPACE IF NOT EXISTS lab
@@ -31,13 +31,13 @@ INSERT INTO events (id, ts, data) VALUES (uuid(), toTimestamp(now()), 'second');
 INSERT INTO events (id, ts, data) VALUES (uuid(), toTimestamp(now()), 'third');
 ```
 
-Force a flush so the data lands on disk:
+Force a flush so the data lands on disk (`again from project root`):
 
 ```bash
 bin/nodetool flush lab events
 ```
 
-Then find the files that were written:
+Then find the files that were written (`also from project root`):
 
 ```bash
 find ./data/data/lab/events-* -type f | sort
@@ -139,7 +139,7 @@ Now the `sstablemetadata` output has two more gems:
 SSTable min local deletion time: no tombstones (9223372036854775807)
 ```
 
-`9223372036854775807` is `Long.MAX_VALUE`. In Cassandra, every deletion time field needs a sentinel value to mean "not deleted". Rather than adding a separate boolean flag, Cassandra uses `Long.MAX_VALUE` as the **LIVE sentinel** — a value so far in the future it will never be treated as a real GC timestamp. You'll find it defined as `DeletionTime.LIVE.localDeletionTime()` in `src/java/org/apache/cassandra/db/DeletionTime.java`.
+`9223372036854775807` is `Long.MAX_VALUE`. In Cassandra, every deletion time field needs a sentinel value to mean "not deleted". Rather than adding a separate boolean flag, Cassandra uses `Long.MAX_VALUE` as the **LIVE sentinel** — a value so far in the future it will never be treated as a real GC timestamp. You'll find it defined as `DeletionTime.LIVE.localDeletionTime()` in `<cassandra-package>/db/DeletionTime.java`.
 
 ```
 EncodingStats minLocalDeletionTime: 09/22/2015 05:30:00 (1442880000)
@@ -151,7 +151,7 @@ That `2015` date isn't a bug — it's a **delta baseline** hardcoded in `Encodin
 ## How a row is encoded on disk?
 ---
 
-`src/java/org/apache/cassandra/db/rows/UnfilteredSerializer.java` is the class that reads and writes every row to `Data.db`.
+`<cassandra-package>/db/rows/UnfilteredSerializer.java` is the class that reads and writes every row to `Data.db`.
 
 Every row on disk is laid out as:
 
@@ -202,7 +202,7 @@ To skip a row during a compaction scan, Cassandra reads just the size vint and j
 ## SerializationHeader — the schema snapshot
 ---
 
-**`SerializationHeader`** (`src/java/org/apache/cassandra/db/SerializationHeader.java`) is a schema snapshot baked into the SSTable at write time. It lives in `Statistics.db` and holds:
+**`SerializationHeader`** (`<cassandra-package>/db/SerializationHeader.java`) is a schema snapshot baked into the SSTable at write time. It lives in `Statistics.db` and holds:
 
 - `keyType` — how to deserialize the partition key bytes
 - `clusteringTypes` — one type per clustering component
