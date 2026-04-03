@@ -262,7 +262,17 @@ nav {
   }
 
   .comments {
-    margin-top: 10px;
+    clear: both;
+    margin-top: 3.5rem;
+
+    &::before {
+      content: "";
+      display: block;
+      width: 30rem;
+      max-width: 72%;
+      margin: 0 auto 2.5rem;
+      border-top: 2px solid #ddd;
+    }
   }
 
   .read-more {

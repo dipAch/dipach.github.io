@@ -37,20 +37,28 @@ footer-links:
 
 # Enter your Disqus shortname (not your username) to enable commenting on posts
 # You can find your shortname on the Settings page of your Disqus account
-disqus:
+disqus: codotomy
 
 # Enter your Google Analytics web tracking code (e.g. UA-2110908-2) to activate tracking
 google_analytics: UA-175544024-1
 
 # Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
-# Used for Sitemap.xml and your RSS feed
-url:
+# Used for Sitemap.xml, RSS feed, and Disqus thread URLs
+url: https://dipach.github.io
 
 # If you're hosting your site at a Project repository on GitHub pages
 # (http://yourusername.github.io/repository-name)
 # and NOT your User repository (http://yourusername.github.io)
 # then add in the baseurl here, like this: "/repository-name"
 baseurl: ""
+
+# Default front matter for posts (Disqus: set comments: false on a post to hide)
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      comments: true
 
 #
 # !! You don't need to change any of the configuration flags below !!
@@ -75,8 +83,8 @@ kramdown:
 sass:
   style: :expanded # You might prefer to minify using :compressed
 
-# Use the following plug-ins
-gems:
+# Use the following plug-ins (Jekyll 3 used `gems:`; Jekyll 4+ uses `plugins:`)
+plugins:
   - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
   - jekyll-feed # Create an Atom feed using the official Jekyll feed gem
 
