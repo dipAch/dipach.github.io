@@ -4,7 +4,7 @@ title: "into the eye - cassandra sstables - the read path and compaction stuff"
 tags: [cassandra, storage-engine, sstables, compaction, internals]
 ---
 
-This is **Part 2** of our hands-on SSTable series. [Part 1](/cassandra-sstables-whats-really-on-disk/) covered the file layout, row encoding, and `SerializationHeader`.
+This is **Part 2** of our hands-on SSTable series. [<u>Part 1</u>](/cassandra-sstables-whats-really-on-disk/) covered the file layout, row encoding, and `SerializationHeader`.
 Here we watch a read touch up to five components before returning a single row, and then we compact two SSTables by hand to see exactly what LWW (`Last Write Wins`), tombstones, and `gc_grace_seconds` actually do.
 
 ## The read path
@@ -30,7 +30,7 @@ A few details worth internalizing:
 
 <u><b>Check 3</b></u> is the key cache, an `OHCache` instance (off-heap, outside the JVM heap). It lives outside JVM heap tracking and is accounted for separately. A cache hit means zero `Index.db` I/O: we jump directly to the byte offset in `Data.db`.
 
-<u><b>Check 4</b></u> (`IndexSummary`) is a downsampled copy of `Index.db` keys held in memory, one entry every 128 keys by default. Binary search gives you the nearest sampled position to start scanning from. You'll never have to scan more than 128 entries in `Index.db`.
+<u><b>Check 4</b></u> (`IndexSummary`) is a downsampled copy of `Index.db` keys held in memory, one entry every 128 keys by default. `Binary search` gives you the nearest sampled position to start scanning from. You'll never have to scan more than 128 entries in `Index.db`.
 
 <u><b>Check 5</b></u> is actual disk I/O. The scan reads `(key, RowIndexEntry)` pairs sequentially from the sampled position until it finds your key. `RowIndexEntry` contains the byte offset in `Data.db`, and once found, it's written into the key cache so that <i>Gate 3</i> can fire next time.
 
@@ -244,10 +244,10 @@ ALTER TABLE lab.events WITH gc_grace_seconds = 864000;
 You can now reproduce any SSTable behaviour from scratch, no longer a black box:
 
 - A read burns at most one `Index.db` I/O on first access, then zero on every repeat (key cache)
-- Compaction is a K-way merge-sort with a timestamp comparator. `Cells.reconcile()` is where LWW actually happens
+- Compaction is a `K-way merge-sort` with a timestamp comparator. `Cells.reconcile()` is where LWW actually happens
 - A tombstone is just a row with a timestamp and no cells. It shadows its target across SSTable boundaries during reads, but only at its own clustering address
 - `gc_grace_seconds` is not an optimisation, it's a correctness window: purge too early and you get silent data resurrection on rejoining replicas
 
-If [Part 1](/cassandra-sstables-whats-really-on-disk/) taught us what an SSTable is made of, **Part 2** is how we reason about what happens to that data at read time and across compaction.
+If [<u>Part 1</u>](/cassandra-sstables-whats-really-on-disk/) taught us what an SSTable is made of, **Part 2** is how we reason about what happens to that data at read time and across compaction.
 
 I hope you found this somewhat interesting and useful. Until next time!
