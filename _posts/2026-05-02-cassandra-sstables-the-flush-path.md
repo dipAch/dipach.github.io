@@ -163,13 +163,13 @@ EncodingStats minLocalDeletionTime: 09/22/2015 05:30:00 (1442880000)
 
 A few things map directly to what we have just covered:
 
-**`SSTable Level: 0`   >** Level 0 is always where fresh SSTables land. They haven't been through compaction yet.
+**`SSTable Level: 0` >** Level 0 is always where fresh SSTables land. They haven't been through compaction yet.
 
-**`Replay positions covered`   >** The exact commit log segments and byte offsets this SSTable covers. Once the SSTable is durable, those segments can be recycled. Three ranges here means writes to this SSTable came from three different commit log segments over its lifetime, exactly the `COMMITLOG_DIRTY` pressure we discussed.
+**`Replay positions covered` >** The exact commit log segments and byte offsets this SSTable covers. Once the SSTable is durable, those segments can be recycled. Three ranges here means writes to this SSTable came from three different commit log segments over its lifetime, exactly the `COMMITLOG_DIRTY` pressure we discussed.
 
-**`EncodingStats minTimestamp`   >** The delta encoding baseline from [Part 1](/cassandra-sstables-whats-really-on-disk/). Every cell timestamp in `Data.db` is stored as a delta from this value.
+**`EncodingStats minTimestamp` >** The delta encoding baseline from [Part 1](/cassandra-sstables-whats-really-on-disk/). Every cell timestamp in `Data.db` is stored as a delta from this value.
 
-**`EncodingStats minLocalDeletionTime: 09/22/2015`   >** This one looks odd on a table with no tombstones. `EncodingStats` tracks the minimum `localDeletionTime` to use as a delta baseline for tombstone times. Live rows carry `DeletionTime.LIVE` with `localDeletionTime = Integer.MAX_VALUE`, including that in the minimum would make delta encoding useless, so Cassandra skips it. With no actual tombstones, the minimum never gets set from real data and stays at the hardcoded floor in `EncodingStats.NO_STATS`: epoch second `1442880000`, that 2015 date. When a real tombstone is written, it displaces this default with its actual `local_delete_time`.
+**`EncodingStats minLocalDeletionTime: 09/22/2015` >** This one looks odd on a table with no tombstones. `EncodingStats` tracks the minimum `localDeletionTime` to use as a delta baseline for tombstone times. Live rows carry `DeletionTime.LIVE` with `localDeletionTime = Integer.MAX_VALUE`, including that in the minimum would make delta encoding useless, so Cassandra skips it. With no actual tombstones, the minimum never gets set from real data and stays at the hardcoded floor in `EncodingStats.NO_STATS`: epoch second `1442880000`, that 2015 date. When a real tombstone is written, it displaces this default with its actual `local_delete_time`.
 
 ## Conclusion
 
