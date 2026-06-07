@@ -302,7 +302,7 @@ Cassandra's raw φ computation is just:
 φ_cassandra = (now - tLast) / mean
 ```
 
-No logarithm. A raw time ratio. This diverges from the paper's log-probability scale. A raw value of 3.0 does not mean what φ=3.0 means in Hayashibara's formula.
+No logarithm. A raw time ratio. This diverges from the paper's log-probability scale. A raw value of `3.0` does not mean what `φ = 3.0` means in Hayashibara's formula.
 
 The bridge is `PHI_FACTOR`:
 
