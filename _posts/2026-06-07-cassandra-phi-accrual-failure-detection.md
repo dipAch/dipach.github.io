@@ -191,7 +191,9 @@ P(silence > 1.1s | alive) = 1 - 0.630 = 0.370
 
 **Same mean. Same silence. Completely different φ.**
 
-The consistent node scores **3.5** ~> suspicious. The jittery node scores **0.43** ~> totally normal. "σ" encodes how surprising the silence is relative to that node's own personality.
+The consistent node scores **3.5** ~> suspicious. The jittery node scores **0.43** ~> totally normal.
+
+"σ" encodes how surprising the silence is relative to that node's own personality.
 
 ### When does conviction (φ = 8) fire?
 
@@ -419,14 +421,14 @@ The frozen counter is φ climbing in slow motion. Every second that passes witho
 
 On CCM (single machine, shared kernel), all three nodes flip simultaneously because their inter-arrival histories are identical. In production, with real network jitter and independent GC pause histories per node, the three φ values diverge and nodes cross the threshold seconds apart.
 
-That divergence window where node1 has declared node4 dead but node3 still considers it alive, is a fundamentally different problem from gossip delivery lag. Delivery lag is about news arriving late. This is about each node making an **independent probabilistic judgment** at a different moment, with no mechanism to coordinate those judgments.
+That divergence window where node1 has declared node4 dead but node3 still considers it alive, is a fundamentally different problem from gossip delivery lag. Delivery lag is about news arriving late, but this is about each node making an **independent probabilistic judgment** at a different moment, with no mechanism to coordinate those judgments.
 
 ## Conclusion
 
 Failure detection tells each node *when* to mark a peer dead and can very well introduce windows where the cluster's view is inconsistent.
 
 #### If not anything, consider taking away below from this post:
-- Fixed timeouts weigh between false positives and slow recovery. φ adapts to the actual heartbeat pattern of each peer, sidestepping that trade-off.
+- Fixed timeouts weigh between false positives and slow recovery. φ adapts to the actual heartbeat pattern of each peer, side-stepping that trade-off.
 - φ is not a probability of death ~> rather it's a derived scrore based on the probability that the current silence is normal, if the node were indeed alive. Crossing the threshold means rejecting the idea that the node is alive. So, basically give the benefit of doubt until you no longer can.
 - Cassandra's raw `(t/μ)` scaled by `PHI_FACTOR = 1/ln(10)` applies the paper's φ definition, but under an exponential probability distribution, not the paper's normal distribution. Cassandra ignores σ (stddev), so heartbeat consistency plays no role in conviction.
 - In a real cluster each node decides independently, they can disagree on who is dead and for how long.
