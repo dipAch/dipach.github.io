@@ -328,7 +328,7 @@ t/μ > 8 × ln(10)
 t/μ > 18.42
 ```
 
-Silence must be 18.42× longer than the mean for conviction to fire. At a 1-second gossip interval, that's roughly **18 seconds of silence**.
+Silence must be **18.42×** longer than the mean for conviction to fire. At 1-second gossip interval, that's roughly **18 seconds of silence**.
 
 ## The GC guard
 
