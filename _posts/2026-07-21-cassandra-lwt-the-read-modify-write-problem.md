@@ -142,12 +142,26 @@ And just like that we are done with the round. Quite the *theatrics!*
 ## Lab time: Hands on
 ---
 
+### Get the tracing build
+
+The hands-on sections of this post use `nodetool paxostrace`, a custom subcommand that instruments Cassandra's Paxos state machine live: capturing every Prepare, Propose, and Commit event across all nodes and stitching them into a single timeline per round. It lives on the `lwt-trace-tool` branch of this fork.
+
+Build it once, and you can point it at any running cluster:
+
+```bash
+# Java 17 used via sdkman: sdk install java 17.0.18-amzn
+git clone https://github.com/dipAch/cassandra.git
+cd cassandra
+git checkout lwt-trace-tool
+ant jar
+```
+
 ### Cluster setup
 
 Let's get down to business. We will spawn a three-node CCM cluster, `SimpleStrategy` with `replication_factor=3`:
 
 ```bash
-ccm create lwt-lab --install-dir=/path/to/cassandra -n 3
+ccm create lwt-lab --install-dir=/path/to/cloned/cassandra -n 3
 ccm start
 ```
 
@@ -166,24 +180,22 @@ The seeds used a plain `INSERT` ~ No `IF`, nor Paxos or any sort of coordination
 
 ### Running LWT
 
-We will try `IF NOT EXISTS` clause on a key that already exists, then on a new one:
-
-```bash
-ccm node1 cqlsh -e "INSERT INTO ks.accounts (id, balance) VALUES (1, 9999) IF NOT EXISTS;"
-```
-```
- [applied] | id | balance
------------+----+---------
-     False |  1 |    1000
-```
+We will try `IF NOT EXISTS` clause on a new key first, and then on a key that already exists:
 
 ```bash
 ccm node1 cqlsh -e "INSERT INTO ks.accounts (id, balance) VALUES (99, 250) IF NOT EXISTS;"
-```
-```
+
  [applied]
 -----------
       True
+```
+
+```bash
+ccm node1 cqlsh -e "INSERT INTO ks.accounts (id, balance) VALUES (1, 9999) IF NOT EXISTS;"
+
+ [applied] | id | balance
+-----------+----+---------
+     False |  1 |    1000
 ```
 
 The result tells us whether the condition held. What we do not see is that both statements triggered a full Paxos round. Let's look inside.
@@ -285,6 +297,38 @@ When the condition fails, the coordinator reads the row and finds `id=1` already
 But, when the condition succeeds, the coordinator computes the actual write, which takes the extra time. No `"commit="` metric appears in the latency line-item because `commitPaxos()` is skipped entirely for empty updates and no `COMMIT_DONE` event is emitted, so there is no end-timestamp to compute the delta against.
 
 `total=2ms` Vs `total=7ms` in this instance, shows how much the synchronous commit phase contributes when it runs.
+
+### The orphaned proposal: evidence in `system.paxos`
+
+The skipped commit leaves a trace that we can query directly. Run below query after the `[applied] = false` LWT:
+
+```bash
+ccm node1 cqlsh -e "
+SELECT row_key, in_progress_ballot, most_recent_commit_at, proposal_ballot, proposal
+FROM system.paxos
+WHERE cf_id = 1b255f4d-ef25-40a6-0000-000000000009
+ALLOW FILTERING;"
+```
+
+Replace the `cf_id` with the UUID for your `ks.accounts` table:
+> `SELECT id FROM system_schema.tables WHERE keyspace_name = 'ks' AND table_name = 'accounts';`
+
+`row_key` stores the partition key bytes. For an `int` primary key, `id=1` translates to `0x00000001` and `id=99` as `0x00000063` (hex for 99 decimal).
+
+```
+ row_key    | in_progress_ballot | most_recent_commit_at | proposal_ballot    | proposal
+------------+--------------------+-----------------------+--------------------+----------
+ 0x00000063 | b36631d2-...       | b36631d2-...          |               null |     null
+ 0x00000001 | 46751082-...       | ec24d622-...          | 46751082-...       | 0x1b25...
+```
+
+- **`row_key = 0x00000063` (id=99), the `[applied] = true` case:**<br />
+`INSERT INTO ks.accounts (id, balance) VALUES (99, 250) IF NOT EXISTS`, committed cleanly. `in_progress_ballot` equals `most_recent_commit_at`, same ballot for both meaning the commit arrived and cleared the proposal. Hence, `proposal` is null.
+
+- **`row_key = 0x00000001` (id=1), the `[applied] = false` case:**<br />
+`INSERT INTO ks.accounts (id, balance) VALUES (1, 9999) IF NOT EXISTS`, found `id=1` already existing, so the proposal became an empty update. The replicas accepted it and wrote it to `system.paxos`, but `commitPaxos()` was never called, so no commit arrived to clear it. `in_progress_ballot` (`46751082-...`) is a more recent ballot than `most_recent_commit_at` (`ec24d622-...`), and `proposal` is non-null: the empty mutation is sitting there, accepted but uncommitted.
+
+This is exactly the state `beginAndRepairPaxos()` inspects at the start of every new LWT on this partition. It finds `in_progress_ballot > most_recent_commit_at`, sees the proposal is an empty update, and skips replaying it.
 
 <div style="display: inline-block; border: 2px solid black; padding: 5px; width: 250px; margin-top: 30px; margin-bottom: 30px;"><img src="/images/ace.jpeg" alt="Understood"></div>
 
