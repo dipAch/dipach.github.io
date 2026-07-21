@@ -84,7 +84,7 @@ The losing coordinator must retry with an even higher ballot. This ordering is h
 
 Could we have used another consensus algorithm, say *Raft or VSR? Very well,* give it a go! ~ But the core ideology being, we need something that allows for agreeing on an order.
 
-## Ticket please? Tale of four (நான்கு) round trips
+## Ticket please? Tale of four (চাৰিটা) round trips
 ---
 
 LWT takes a minimum of four round trips whereas a regular write takes one:
