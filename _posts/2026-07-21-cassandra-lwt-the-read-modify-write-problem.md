@@ -244,7 +244,7 @@ All in all twelve events observed, comprising of three fan-outs (Prepare, Propos
 The `Latency:` line (produced by `--latency`) breaks down where the 7ms went.
 - `prepare=~1ms` is the Prepare fan-out: messages out, promises in and quorum reached.
 - `check=~4ms` is the largest slice. This is the gap between `PREPARE_DONE` and the first `LEGACY_PROPOSE`, the window where the coordinator read the row under ballot protection and evaluated `IF balance = 1000`, built the write mutation and dispatched propose messages.
-- `propose=~0ms` and `commit=1ms` are sub-millisecond: once the mutation was ready, replicas accepted and committed fast. Metrics (such as, `prepare`, `propose` & `commit`) that span node boundaries, might carry clock-skew noise. Only `check` metric is coordinator-only and exact. Both `PROPOSE_DONE` and `COMMIT_DONE` are emitted by the coordinator on the same node.
+- `propose=~0ms` and `commit=1ms` are sub-millisecond: once the mutation was ready, replicas accepted and committed fast. Metrics (such as, `prepare`, `propose` & `commit`) that span node boundaries, might carry clock-skew noise. The `"check="` metric is coordinator-only and exact. Both `PROPOSE_DONE` and `COMMIT_DONE` are emitted by the coordinator on the same node.
 
 ### Analysing the trace on: [applied] = false
 
