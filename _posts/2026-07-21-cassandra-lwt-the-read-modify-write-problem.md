@@ -244,7 +244,7 @@ All in all twelve events observed, comprising of three fan-outs (Prepare, Propos
 The `Latency:` line (produced by `--latency`) breaks down where the 7ms went.
 - `prepare=~1ms` is the Prepare fan-out: messages out, promises in and quorum reached.
 - `check=~4ms` is the largest slice. This is the gap between `PREPARE_DONE` and the first `LEGACY_PROPOSE`, the window where the coordinator read the row under ballot protection and evaluated `IF balance = 1000`, built the write mutation and dispatched propose messages.
-- `propose=~0ms` and `commit=1ms` are sub-millisecond: once the mutation was ready, replicas accepted and committed fast. Metrics (such as, `prepare`, `propose` & `commit`) that span node boundaries, might carry clock-skew noise. Only `commit` is coordinator-only and exact — both `PROPOSE_DONE` and `COMMIT_DONE` are emitted by the coordinator on the same node.
+- `propose=~0ms` and `commit=1ms` are sub-millisecond: once the mutation was ready, replicas accepted and committed fast. Metrics (such as, `prepare`, `propose` & `commit`) that span node boundaries, might carry clock-skew noise. Only `check` metric is coordinator-only and exact. Both `PROPOSE_DONE` and `COMMIT_DONE` are emitted by the coordinator on the same node.
 
 ### Analysing the trace on: [applied] = false
 
@@ -282,7 +282,7 @@ The condition check is not a pre-flight: it runs inside the Paxos round, after t
 
 When the condition fails, the coordinator reads the row and finds `id=1` already exists and immediately proposes an empty mutation. There is nothing to build in this case.
 
-But, when the condition succeeds, the coordinator computes the actual write, which takes the extra time. No `commit=` metric appears in the latency line-item because `commitPaxos()` is skipped entirely for empty updates — no `COMMIT_DONE` event is emitted, so there is no end-timestamp to compute the delta against.
+But, when the condition succeeds, the coordinator computes the actual write, which takes the extra time. No `"commit="` metric appears in the latency line-item because `commitPaxos()` is skipped entirely for empty updates and no `COMMIT_DONE` event is emitted, so there is no end-timestamp to compute the delta against.
 
 `total=2ms` Vs `total=7ms` in this instance, shows how much the synchronous commit phase contributes when it runs.
 
