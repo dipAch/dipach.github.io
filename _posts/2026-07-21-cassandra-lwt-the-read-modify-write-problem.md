@@ -89,7 +89,7 @@ Could we have used another consensus algorithm, say *Raft or VSR? Very well,* gi
 
 LWT takes a minimum of four round trips whereas a regular write takes one:
 
-<div><img src="/images/paxos-round-trip.png" alt="Paxos round trip"></div>
+<div><img src="/images/paxos-round-trip.png" alt="Paxos round trip" /></div>
 
 Each step requires a quorum of replicas before the coordinator moves forward. If any step fails, say a replica rejects the ballot or a deadline exceeds, then the coordinator retries from the Prepare step with an even higher ballot.
 
@@ -330,15 +330,14 @@ Replace the `cf_id` with the UUID for your `ks.accounts` table:
 
 This is exactly the state `beginAndRepairPaxos()` inspects at the start of every new LWT on this partition. It finds `in_progress_ballot > most_recent_commit_at`, sees the proposal is an empty update, and skips replaying it.
 
-<div style="display: inline-block; border: 2px solid black; padding: 5px; width: 250px; margin-top: 30px; margin-bottom: 30px;"><img src="/images/ace.jpeg" alt="Understood"></div>
+<div style="display: inline-block; border: 2px solid black; padding: 5px; width: 250px; margin-top: 30px; margin-bottom: 30px;"><img src="/images/ace.jpeg" alt="Understood" /></div>
 
 ## How `<paxostrace>` works? (skippable)
 ---
 
 The tool is simple and it is not reading any log files or scraping anything after the fact. Events are captured **live, inside the Paxos state machine**, at the exact points where each phase outcome is decided.
 
-> The modifications are available in my Cassandra fork, under the branch:
-<a href="https://github.com/dipAch/cassandra/tree/lwt-trace-tool" target="_blank">`lwt-trace-tool`</a>
+> The tool is available in my Cassandra fork, under the branch: <a href="https://github.com/dipAch/cassandra/tree/lwt-trace-tool" target="_blank">`lwt-trace-tool` <img width=15 style="vertical-align:middle" src="/images/new-window.png" /></a>
 
 **Instrumentation:** `PaxosState.java` is the per-replica state machine. It has three core methods: `promiseIfNewer()`, `acceptIfLatest()`, and `applyCommit()`, each with several return sites depending on the outcome (PROMISE, REJECT, PERMIT_READ, ACCEPTED, etc.). A call to `PaxosTraceStore.add()` is inserted at each of those sites, capturing the outcome as it happens, not reconstructed, nor approximated. On the coordinator side, `StorageProxy.doPaxos()` emits its own events (`PREPARE_DONE`, `PROPOSE_DONE`, `COMMIT_DONE`) after each quorum reply comes in.
 
